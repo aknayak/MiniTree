@@ -10,6 +10,7 @@ def defineBasePreSelection(process,
                            egmuTriggerFilter='',
                            egtriglist=['HLT_Ele10_LW_L1R'],
                            mutriggerlist=['HLT_Mu9'],
+                           jettriglist=['HLT_Jet15U'],
                            trigMenu='HLT') :
 
     #
@@ -80,6 +81,9 @@ def defineBasePreSelection(process,
     process.egmu_selector = process.eg_selector.clone()
     process.egmu_selector.HLTPaths.extend( process.mu_selector.HLTPaths)
     process.egmu_selector.andOr=cms.bool(True)
+    process.jet_selector = process.eg_selector.clone()
+    process.jet_selector.andOr=cms.bool(True)
+    process.jet_selector.HLTPaths = cms.vstring(jettriglist)
     
     #trigger sequences 
     if(egmuTriggerFilter=="inclusive_eg") :
@@ -97,6 +101,9 @@ def defineBasePreSelection(process,
     elif(egmuTriggerFilter=="inclusive_egmu") :
         process.inclusive_egmu = cms.Sequence( process.egmu_selector )
         process.basePreSel = cms.Sequence( process.inclusive_egmu*process.basePreSel )
+    elif(egmuTriggerFilter=="inclusive_jet") :
+        process.inclusive_jet = cms.Sequence( process.jet_selector )
+        process.basePreSel = cms.Sequence(process.inclusive_jet*process.basePreSel )    
     if(len(egmuTriggerFilter)>0) :
         print '   EG/Mu trigger filter defined as: ' + egmuTriggerFilter
 

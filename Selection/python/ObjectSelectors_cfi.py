@@ -43,7 +43,7 @@ BaseMuonsSet =  cms.PSet( sources = cms.VInputTag("selectedPatMuons","selectedPa
                           onlyGlobal = cms.bool(True),
                           id = cms.string('GlobalMuonPromptTight'),
                           maxD0 = cms.double(200),
-                          maxRelIso = cms.double(0.15),
+                          maxRelIso = cms.double(0.25),
                           useDefaultIso = cms.bool(True),
                           maxTrackChi2 = cms.double(10),
                           minTrackValidHits = cms.int32(10),
@@ -54,20 +54,18 @@ BaseMuonsSet =  cms.PSet( sources = cms.VInputTag("selectedPatMuons","selectedPa
 
 # base values for electron selection ----------------------------------------------
 BaseElectronsSet =  cms.PSet(sources = cms.VInputTag("selectedPatElectrons", "selectedPatElectronsPFlow"),
-                             #sources = cms.VInputTag("selectedPatElectrons","selectedPatElectronsPFlow"),
-                             
                              ebRecHits = cms.InputTag("ecalRecHit:EcalRecHitsEB"),
                              eeRecHits = cms.InputTag("ecalRecHit:EcalRecHitsEE"),
                              dedxSource = cms.InputTag("dedxHarmonic2"),
                              triggerEvent = cms.InputTag("patTriggerEvent"),
                              triggerMatch = cms.string("TrigMatch"),
-                             minEt = cms.double(20),
-                             minSCEt = cms.double(15),
+                             minEt = cms.double(10),
+                             minSCEt = cms.double(10),
                              maxEta = cms.double(2.5),
                              ecalOnly = cms.bool(True),
                              id = cms.string('simpleEleId90relIso'),
                              maxD0 = cms.double(400),
-                             maxRelIso = cms.double(0.15),
+                             maxRelIso = cms.double(0.25),
                              useDefaultIso = cms.bool(True),
                              maxTrackLostHits = cms.int32(1),
                              minDeltaRtoMuons = cms.double(0.1),
@@ -76,43 +74,37 @@ BaseElectronsSet =  cms.PSet(sources = cms.VInputTag("selectedPatElectrons", "se
                              )
 
 #my base values for jet selection -----------------------------------------------
-BaseJetsSet = cms.PSet(sources = cms.VInputTag("selectedPatJets", "selectedPatJetsPFlow"),
-                       #sources = cms.VInputTag("selectedPatJets","selectedPatJetsAK5PF","selectedPatJetsPFlow"),
+BaseJetsSet = cms.PSet(sources = cms.VInputTag("selectedPatJetsAK5PF","selectedPatJetsPFlow"),
                        CaloJetId = cms.PSet( version = cms.string("PURE09"), quality = cms.string("LOOSE") ),
                        PFJetId = cms.PSet( version = cms.string("FIRSTDATA"), quality = cms.string("LOOSE") ),
                        dedxSource = cms.InputTag("dedxHarmonic2"),
                        triggerEvent = cms.InputTag("patTriggerEvent"),
                        triggerMatch = cms.string("TrigMatch"),
                        useRawJets = cms.bool(False),
-                       minPt = cms.double(30),
+                       minPt = cms.double(17),
                        maxEta = cms.double(2.5),
                        minDeltaRtoLepton = cms.double(0.4)
-                        )
+                       )
 
 #my base values for tau selection -----------------------------------------------
-BaseTausSet = cms.PSet(sources = cms.VInputTag("selectedPatTaus", "selectedPatTausPFlow"),
-                       #sources = cms.VInputTag("selectedPatTaus"), 
+BaseTausSet = cms.PSet(sources = cms.VInputTag("selectedPatTausHpsPFTau", "selectedPatTausPFlow"),
+                       minPt                    = cms.double(10.0),
                        maxEta                   = cms.double(2.4),    
                        minDeltaRtoLeptons       = cms.double(0.3), 
-                       minDeltaRtoOriginJet     = cms.double(0.3)
+                       maxDeltaRtoOriginJet     = cms.double(0.3)
                        )
 
 
 #my base values for met selection ------------------------------------------------
-BaseMetsSet = cms.PSet(sources = cms.VInputTag("patMETs", "patMETsPFlow"),
-                       #sources = cms.VInputTag("patMETs","patMETsPF","patMETsPFlow"),
+BaseMetsSet = cms.PSet(sources = cms.VInputTag("patMETsPF","patMETsPFlow"),
                        minMET = cms.double(10)
-                        )
+                       )
 
 #my MC truth matching sets -------------------------------------------------------
 BaseMCTruthSet = cms.PSet( isData = cms.bool(False),
-                           producePDFweights = cms.bool(True),
+                           producePDFweights = cms.bool(False),
                            sampleCode = cms.string("SEECODES"),
-                           jpMatchSources = cms.VInputTag("selectedPatJetsByRef", "selectedPatJetsAK5JPTByRef", "selectedPatJetsAK5PFByRef", "selectedPatJetsPFlowByRef"),
-                           minPtHat = cms.double(0),
-                           maxPtHat = cms.double(14000),
-                           minDYMass = cms.double(0),
-                           maxDYMass = cms.double(14000)
+                           jpMatchSources = cms.VInputTag("selectedPatJetsByRef", "selectedPatJetsAK5JPTByRef", "selectedPatJetsAK5PFByRef", "selectedPatJetsPFlowByRef")
                            )
 
 

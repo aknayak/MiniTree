@@ -44,7 +44,7 @@ defineBasePreSelection(process,False,False,not isFastsim and not isAOD)
 #tau stuff
 configureTauProduction(process, not isData)
 
-addJetMETExtra(process,'Spring10',isData,isFastsim, applyResJEC,addPF2PAT,isAOD)
+addJetMETExtra(process,isData,applyResJEC,isAOD)
 addTriggerMatchExtra(process,egtriglist,mutriglist,jettriglist,False,trigMenu)
 defineGenUtilitiesSequence(process)
 

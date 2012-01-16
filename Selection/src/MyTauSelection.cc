@@ -10,7 +10,9 @@ std::vector<MyTau> MyEventSelection::getTaus(const edm::Event& iEvent, const edm
   try{
     //config parameters
     std::vector<edm::InputTag> sources = configParamsTaus_.getParameter<std::vector<edm::InputTag> >("sources");
-    
+    double minPt = configParamsJets_.getParameter<double>("minPt");
+    double maxEta = configParamsJets_.getParameter<double>("maxEta");
+
     //collect Taus
     for(std::vector<edm::InputTag>::iterator sit = sources.begin();
         sit != sources.end();
@@ -38,7 +40,8 @@ std::vector<MyTau> MyEventSelection::getTaus(const edm::Event& iEvent, const edm
 	      newTau.tauAlgo = tag;
 	      
 	      //make selection
-	      if(newTau.decayModeFinding > 0.5){
+	      if(newTau.decayModeFinding > 0.5 && tIt.pt() >= minPt && 
+		 fabs(tIt.eta()) <= maxEta){
 		selTaus.push_back(newTau);
 	      }
             }

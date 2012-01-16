@@ -8,6 +8,9 @@ std::vector<MyVertex> MyEventSelection::getVertices(const edm::Event& iEvent, co
   selVertices.clear();
 
   try{
+    bestPrimVertex_ = 0;
+    refPoint_ = math::XYZPoint(0,0,0);
+
     //config parameters
     edm::InputTag vtxSource = configParamsVertex_.getParameter<edm::InputTag>("vertexSource");
     edm::InputTag bsSource = configParamsVertex_.getParameter<edm::InputTag>("beamSpotSource");
@@ -33,7 +36,7 @@ std::vector<MyVertex> MyEventSelection::getVertices(const edm::Event& iEvent, co
       }
     std::sort(selVtx.begin(), selVtx.end(), &sumPtOrder);
     //select the best primary vertex (highest sum pT of tracks)
-    bestPrimVertex_ = selVtx[0];
+    if(selVtx.size())bestPrimVertex_ = selVtx[0];
 
     //assign the reference point
     iEvent.getByLabel( bsSource, beamSpot_);

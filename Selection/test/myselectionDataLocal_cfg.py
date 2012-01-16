@@ -38,12 +38,12 @@ process.GlobalTag.globaltag = cms.string( 'GR_R_42_V19::All' )
 if(addPF2PAT):
     print "**** Adding PF2PAT objects ****"
     addpf2PatSequence(process, not isData)
-defineBasePreSelection(process,False,False,True,trigpath,egtriglist,mutriglist)
+defineBasePreSelection(process,False,False,True,trigpath,egtriglist,mutriglist,jettriglist)
 
 #tau stuff
 configureTauProduction(process, not isData)
 
-addJetMETExtra(process,'Spring10',isData,isFastSim, applyResJEC,addPF2PAT,isAOD)
+addJetMETExtra(process,isData,applyResJEC,isAOD)
 addTriggerMatchExtra(process,egtriglist,mutriglist,jettriglist,addPF2PAT,trigMenu)
 
 

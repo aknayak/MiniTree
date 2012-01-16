@@ -5,11 +5,9 @@ from PhysicsTools.PatAlgos.tools.metTools import *
 from PhysicsTools.PatAlgos.tools.jetTools import *
 from PhysicsTools.PatAlgos.tools.cmsswVersionTools import *
         
-def addJetMETExtra(process, jetcorr='Spring10', isData=False, isFastsim=False, applyResJEC=False, addPF2PAT=False,isAOD=False) :
+def addJetMETExtra(process, isData=False, applyResJEC=False, isAOD=False) :
 
     process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-    ##-------------------- Disable the CondDB for the L1FastJet (until they are included in a new global tag) -------
-    ##process.ak5PFL1Fastjet.useCondDB = False  //only for old globaltag (38x)
     ##-------------------- Import the Jet RECO modules -----------------------
     process.load('RecoJets.Configuration.RecoPFJets_cff')
     ##-------------------- Turn-on the FastJet density calculation -----------------------
@@ -17,16 +15,11 @@ def addJetMETExtra(process, jetcorr='Spring10', isData=False, isFastsim=False, a
     ##-------------------- Turn-on the FastJet jet area calculation for your favorite algorithm -----------------------
     process.ak5PFJets.doAreaFastjet = True
     process.FastJetSequence = cms.Sequence(process.kt6PFJets * process.ak5PFJets)
-    # Re run the kt6PFJet clustering to calculate rho, for lepton isolation
-    # this produces a double in the event like double_kt6PFJetsForIso_rho__PROCESS
-    process.kt6PFJetsForIso = process.kt4PFJets.clone( rParam = 0.6, doRhoFastjet = True )
-    process.kt6PFJetsForIso.Rho_EtaMax = cms.double(2.5)
-    process.kt6PFJetsForIso.Ghost_EtaMax = cms.double(2.5)
-    process.FastJetSequence = cms.Sequence(process.FastJetSequence + process.kt6PFJetsForIso )
-    
     if(isData) :
+        #if(applyResJEC) :
         corrections = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual', 'L5Flavor', 'L7Parton']
-        #corrections = ['L1FastJet','L2Relative','L3Absolute','L2L3Residual']
+        #else :
+        #corrections = ['L1FastJet','L2Relative','L3Absolute','L5Flavor','L7Parton']
         runOnData(process, ['All'])
     else :
         corrections = ['L1FastJet','L2Relative','L3Absolute','L5Flavor','L7Parton']
@@ -51,7 +44,7 @@ def addJetMETExtra(process, jetcorr='Spring10', isData=False, isFastsim=False, a
                      jetIdLabel   = "ak5"
                      )
     process.patJetCorrFactorsAK5PF.useRho = True
-    if( isAOD ) : process.patJetsAK5PF.addTagInfos
+    if( isAOD ) : process.patJetsAK5PF.addTagInfos = cms.bool(False)
     
     ##print "*** Adding JPT ak5 jets ***"
     ##addJetCollection(process,cms.InputTag('JetPlusTrackZSPCorJetAntiKt5'),

@@ -146,7 +146,11 @@ MyJet MyEventSelection::MyJetConverter(const pat::Jet& iJet, TString& dirtag)
   const std::vector<std::string> jeclevels = iJet.availableJECLevels();
   for(size_t j = 0; j < jeclevels.size(); j++){
     std::string levelName = jeclevels[j];
-    jetCorrections[levelName] = iJet.jecFactor(levelName);
+    if(levelName.find("L5Flavor") != std::string::npos ||
+       levelName.find("L7Parton") != std::string::npos ){
+      jetCorrections[levelName] = iJet.jecFactor(levelName, "bottom");
+    }
+    else{ jetCorrections[levelName] = iJet.jecFactor(levelName); }
   }
   newJet.JECs = jetCorrections;
   newJet.JECUncertainty = 1.0;  //default, get it later from CondDB.
