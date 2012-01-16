@@ -1,0 +1,8 @@
+<samples>
+
+<!-- MC samples -->
+
+  <id tag="ttbar-test" mutrig="HLT_IsoMu24_v1" egtrig="HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v2" ds="/TTJets_TuneZ2_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM" ntoprocess="5000" totalevents="50000" ps="myselectionMC_cfg.py" trigressource="HLT" myplugin="selection" gt="START42_V13::All" isaod="True" server="1" cs="TTBAR"/>
+
+</samples>
+

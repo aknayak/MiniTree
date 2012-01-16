@@ -1,0 +1,13 @@
+<samples>
+
+<!--
+    *  Run2011A data taking Runs<=161312
+          o /SingleElectron/Run2011A-May10ReReco-v1/AOD
+          o /SingleMu/Run2011A-PromptReco-v1/AOD
+-->
+
+<!--Runs :160431-161176   -->
+  <id tag="Electron_1" mutrig="HLT_IsoMu12_v1" egtrig="HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v1" storeoutput="False" jsonfile="7TeV2011/json/Cert_160404-161176_May10ReReco_json.txt" ntoprocess="40" ps="myselectionData_cfg.py" myplugin="selection" trigpath="exclusive_eg" ds="/SingleElectron/Run2011A-May10ReReco-v1/AOD" gt="GR_R_42_V19::All" server="1" isaod="True" cs="DATA"/> 
+  <id tag="Muon_1" mutrig="HLT_IsoMu12_v1" egtrig="HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v1" storeoutput="False" jsonfile="7TeV2011/json/Cert_160404-161176_May10ReReco_json.txt" ntoprocess="40" ps="myselectionData_cfg.py" myplugin="selection" trigpath="inclusive_mu" ds="/SingleMu/Run2011A-May10ReReco-v1/AOD" gt="GR_R_42_V19::All" server="1" isaod="True" cs="DATA"/> 
+
+</samples>

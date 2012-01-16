@@ -1,0 +1,46 @@
+[CRAB]
+jobtype                 = cmssw
+scheduler               = glite
+@server
+
+[CMSSW]
+datasetpath             = @dataset
+@output_file
+pset                    = @parameterset
+total_number_of_events  = @totalevents
+events_per_job          = @ntoprocess
+runselection            = @run
+@lumi_mask
+@split_by_run
+@dbs_url
+
+[USER]
+#return_data             = 0
+#copy_data               = 1
+#storage_element         = T2_PT_LIP_Lisbon
+#publish_data            = 1
+#publish_data_name       = @sampletag
+#dbs_url_for_publication = https://cmsdbsprod.cern.ch:8443/cms_dbs_ph_analysis_02_writer/servlet/DBSServlet
+return_data=1
+copy_data=0
+use_central_bossDB      = 0
+use_boss_rt             = 0
+ui_working_dir          = @sampledir
+thresholdLevel          = 80
+email                   = anayak@cern.ch
+
+[GRID]
+rb                      = CERN
+proxy_server            = myproxy.cern.ch
+virtual_organization    = cms
+retry_count             = 2
+lcg_catalog_type        = lfc
+lfc_host                = lfc-cms-test.cern.ch
+lfc_home                = /grid/cms
+ce_black_list           = cern,kiae.ru,jinr.ru,res.in,sinp,mit,unl
+se_black_list           = cern,kiae.ru,jinr.ru,res.in,sinp,mit,unl
+#ce_white_list           = ncg.ingrid.pt
+#se_white_list           = ncg.ingrid.pt
+#ce_white_list           = wisc,desy
+#se_white_list           = wisc,desy 
+
