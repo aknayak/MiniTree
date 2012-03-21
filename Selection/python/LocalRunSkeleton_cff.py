@@ -14,7 +14,8 @@ process.setName_(procName)
 process.GlobalTag.globaltag = cms.string( 'GR_R_36X_V11A::All' )
 
 # add simple cut based electron identification to PAT
-process.load('RecoEgamma.ElectronIdentification.simpleEleIdSequence_cff')
+#process.load('RecoEgamma.ElectronIdentification.simpleEleIdSequence_cff')
+process.load("ElectroWeakAnalysis.WENu.simpleEleIdSequence_cff")
 process.makePatElectrons = cms.Sequence( process.eIdSequence * process.simpleEleIdSequence * process.electronMatch * process.patElectrons )
 process.patElectrons.electronIDSources.simpleEleId95relIso =cms.InputTag("simpleEleId95relIso")
 process.patElectrons.electronIDSources.simpleEleId90relIso =cms.InputTag("simpleEleId90relIso")
@@ -32,8 +33,8 @@ process.patElectrons.electronIDSources.simpleEleId60cIso =cms.InputTag("simpleEl
 
 #-- Meta data to be logged in DBS ---------------------------------------------
 process.configurationMetadata = cms.untracked.PSet(
-    version = cms.untracked.string('$Revision: 1.16 $'),
-    name = cms.untracked.string('$Source: /cvs_server/repositories/CMSSW/UserCode/psilva/TopDileptons/test/LocalDataRun_cfg.py,v $'),
+    version = cms.untracked.string('$Revision: 1.1 $'),
+    name = cms.untracked.string('$Source: /cvs_server/repositories/CMSSW/UserCode/anayak/MiniTree/Selection/python/LocalRunSkeleton_cff.py,v $'),
     annotation = cms.untracked.string('top dileptons analysis')
     )
 
