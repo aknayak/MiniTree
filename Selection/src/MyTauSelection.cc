@@ -76,10 +76,12 @@ MyTau MyEventSelection::MyTauConverter(const pat::Tau& iTau, TString& dirtag)
   newTau.TightIsolation = iTau.tauID("byTightIsolation");
   newTau.TightIsolationDeltaBetaCorr = iTau.tauID("byTightIsolationDeltaBetaCorr");
   newTau.TightCombinedIsolationDeltaBetaCorr = iTau.tauID("byTightCombinedIsolationDeltaBetaCorr");
-  newTau.againsElectronLoose = iTau.tauID("againstElectronLoose");
+  newTau.againstElectronLoose = iTau.tauID("againstElectronLoose");
   newTau.againstElectronMedium = iTau.tauID("againstElectronMedium");
   newTau.againstElectronTight = iTau.tauID("againstElectronTight");
+  newTau.againstElectronMVA = iTau.tauID("againstElectronMVA");
   newTau.againstMuonLoose = iTau.tauID("againstMuonLoose");
+  newTau.againstMuonMedium = iTau.tauID("againstMuonMedium");
   newTau.againstMuonTight = iTau.tauID("againstMuonTight");
   newTau.decayMode = iTau.decayMode();
 

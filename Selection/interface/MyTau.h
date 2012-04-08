@@ -59,10 +59,12 @@ class MyTau
   float TightIsolationDeltaBetaCorr;
   float TightCombinedIsolationDeltaBetaCorr;
   
-  float againsElectronLoose;
+  float againstElectronLoose;
   float againstElectronMedium;
   float againstElectronTight;
+  float againstElectronMVA;
   float againstMuonLoose;
+  float againstMuonMedium;
   float againstMuonTight;
   
   float decayMode;

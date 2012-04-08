@@ -13,6 +13,7 @@ MyMuon::MyMuon():
   ECaloIso(-999.),
   HCaloIso(-999.),
   RelIso(-999.),
+  UserPFRelIso(-999.),
   GlobalMuonPromptTight(-1),
   normChi2(-999.),
   nHits(-999),
@@ -50,6 +51,7 @@ void MyMuon::Reset()
   ECaloIso = -999.;
   HCaloIso = -999.;
   RelIso = -999.;
+  UserPFRelIso = -999.;
   GlobalMuonPromptTight = -1;
   normChi2 = -999.;
   nHits = -999;

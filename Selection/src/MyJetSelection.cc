@@ -65,10 +65,28 @@ std::vector<MyJet> MyEventSelection::getJets(const edm::Event& iEvent, const edm
           // instantiate the jec uncertainty object
           JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(JetCorPar); 
 	  
+
+	  //get the tau collection and pass it for required information
+	  TString tautag("patTaus");  
+	  if(rawtag.Contains("PFlow") )tautag = TString("patTausPFlow"); 
+	  
+	  //std::cout<<" tau tag for Jet "<<tautag.Data()<<std::endl; 
+	  const std::vector<pat::Tau> *tauColl = 0;
+	  edm::Handle<pat::TauCollection>itaus; 
+	  try{ 
+	    iEvent.getByLabel( tautag.Data(), itaus); 
+	  }catch(std::exception &e){ } 
+	  if(itaus.isValid()){
+	    tauColl = itaus.product();
+	  }
+
 	  for(size_t iJet = 0; iJet < ijets->size(); iJet++)
 	    {
 	      const pat::Jet jIt = ((*ijets)[iJet]);
-	      MyJet newJet = MyJetConverter(jIt, rawtag);
+
+	      if(jIt.pt() < 15 || fabs(jIt.eta()) > maxEta)continue;
+	      
+	      MyJet newJet = MyJetConverter(jIt, rawtag, tauColl);
 	      newJet.jetName = tag;
 	      
 	      
@@ -111,7 +129,7 @@ std::vector<MyJet> MyEventSelection::getJets(const edm::Event& iEvent, const edm
 }
   
     
-MyJet MyEventSelection::MyJetConverter(const pat::Jet& iJet, TString& dirtag)
+MyJet MyEventSelection::MyJetConverter(const pat::Jet& iJet, TString& dirtag, const std::vector<pat::Tau> *tauColl)
 {
   MyJet newJet;
   newJet.Reset();
@@ -235,6 +253,45 @@ MyJet MyEventSelection::MyJetConverter(const pat::Jet& iJet, TString& dirtag)
 
   myhistos_["ntracks_"+dirtag]->Fill(tracks.size());
   myhistos_["nconstituents_"+dirtag]->Fill(iJet.numberOfDaughters());
-  
+
+  //Match to a reco tau and get AgainstLepton Discriminators, needed for tau fake rate studies
+  if(iJet.isPFJet()){
+    pat::Tau *matchTau = getTauMatchedtoJet(iJet, tauColl); 
+    if(matchTau != 0){
+      newJet.tau_vertex.SetCoordinates(matchTau->vertex().x(), matchTau->vertex().y(), matchTau->vertex().z());
+      newJet.tau_againstElectronLoose = matchTau->tauID("againstElectronLoose");
+      newJet.tau_againstElectronMedium = matchTau->tauID("againstElectronMedium"); 
+      newJet.tau_againstElectronTight = matchTau->tauID("againstElectronTight"); 
+      newJet.tau_againstElectronMVA = matchTau->tauID("againstElectronMVA"); 
+      newJet.tau_againstMuonLoose = matchTau->tauID("againstMuonLoose"); 
+      newJet.tau_againstMuonMedium = matchTau->tauID("againstMuonMedium"); 
+      newJet.tau_againstMuonTight = matchTau->tauID("againstMuonTight"); 
+      //std::cout<<" against electron Medium "<<matchTau->tauID("againstElectronMedium")<<std::endl;
+    }
+  } 
+
   return newJet;
+}
+
+pat::Tau* MyEventSelection::getTauMatchedtoJet(const pat::Jet& iJet, const std::vector<pat::Tau> *tauColl)
+{
+  pat::Tau* matchTau = 0;
+
+  if(tauColl->size() == 0) return 0;
+  
+  if(iJet.originalObjectRef().isNonnull()){
+    for(size_t iTau = 0; iTau < tauColl->size(); iTau++)
+      {
+	const pat::Tau tIt = ((*tauColl)[iTau]);
+	if(tIt.pfJetRef()->pt() == iJet.originalObjectRef()->pt() &&
+	   tIt.pfJetRef()->eta() == iJet.originalObjectRef()->eta() && 
+	   tIt.pfJetRef()->phi() == iJet.originalObjectRef()->phi() ){
+	  matchTau = const_cast<pat::Tau*>(&((*tauColl)[iTau]));
+	  //std::cout<<"Jet finds a tau ref. pt"<<iJet.pt()<<" eta "<<iJet.eta()<<std::endl;
+	  //std::cout<<"matched tau vz "<<matchTau->vz()<<" pt "<<matchTau->pt()<<" eta "<<matchTau->eta()<<std::endl;
+	}
+      }
+  }
+   
+  return matchTau;
 }

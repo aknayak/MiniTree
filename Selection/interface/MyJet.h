@@ -64,6 +64,16 @@ class MyJet
   int quality;
 
   Point3D vertex;
+  
+  //needed for tau-fake rate studies
+  Point3D tau_vertex;
+  float tau_againstElectronLoose; 
+  float tau_againstElectronMedium; 
+  float tau_againstElectronTight; 
+  float tau_againstElectronMVA; 
+  float tau_againstMuonLoose; 
+  float tau_againstMuonMedium; 
+  float tau_againstMuonTight; 
 
  private :
 

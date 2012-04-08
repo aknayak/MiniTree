@@ -75,13 +75,9 @@ def addTriggerMatchExtra(process, eleTrigList=['HLT_Ele10_LW_L1R'], muTrigList=[
         process.JetsTrigMatch.matchedCuts = cms.string( 'path( "HLT_*" )' )
         trigMatchModules.append('JetsTrigMatch')
         
-        process.JetsAK5PFTrigMatch = process.JetsTrigMatch.clone()
-        process.JetsAK5PFTrigMatch.src = cms.InputTag("selectedPatJetsAK5PF")
-        trigMatchModules.append('JetsAK5PFTrigMatch')
-        
-        ##process.JetsAK5JPTTrigMatch = process.JetsTrigMatch.clone()
-        ##process.JetsAK5JPTTrigMatch.src = cms.InputTag('selectedPatJetsAK5JPT')
-        ##trigMatchModules.append('JetsAK5JPTTrigMatch')
+        #process.JetsAK5PFTrigMatch = process.JetsTrigMatch.clone()
+        #process.JetsAK5PFTrigMatch.src = cms.InputTag("selectedPatJetsAK5PF")
+        #trigMatchModules.append('JetsAK5PFTrigMatch')
         
         if(addPF2PAT):
             process.JetsPFlowTrigMatch = process.JetsTrigMatch.clone()

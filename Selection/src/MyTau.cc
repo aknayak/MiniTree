@@ -27,10 +27,12 @@ MyTau::MyTau():
   TightIsolation(-999.),
   TightIsolationDeltaBetaCorr(-999.),
   TightCombinedIsolationDeltaBetaCorr(-999.),
-  againsElectronLoose(-999.),
+  againstElectronLoose(-999.),
   againstElectronMedium(-999.),
   againstElectronTight(-999.),
+  againstElectronMVA(-999.),
   againstMuonLoose(-999.),
+  againstMuonMedium(-999.),
   againstMuonTight(-999.),
   decayMode(-999.)
 {
@@ -71,10 +73,12 @@ void MyTau::Reset()
   TightIsolation = -999.;
   TightIsolationDeltaBetaCorr = -999.;
   TightCombinedIsolationDeltaBetaCorr = -999.;
-  againsElectronLoose = -999.;
+  againstElectronLoose = -999.;
   againstElectronMedium = -999.;
   againstElectronTight = -999.;
+  againstElectronMVA = -999.;
   againstMuonLoose = -999.;
+  againstMuonMedium = -999.;
   againstMuonTight = -999.;
   decayMode = -999.;
 

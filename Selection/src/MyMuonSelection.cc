@@ -177,7 +177,9 @@ MyMuon MyEventSelection::MyMuonConverter(const pat::Muon& iMuon, TString& dirtag
   }
 
   //isolation
-  std::vector<double> iso = defaultMuonIsolation(iMuon);
+  bool isPF = false;
+  if(dirtag.Contains("PFlow"))isPF = true;
+  std::vector<double> iso = defaultMuonIsolation(iMuon, isPF);
   newMuon.TrkIso = iso[0];
   newMuon.ECaloIso = iso[1];
   newMuon.HCaloIso = iso[2];
@@ -185,6 +187,14 @@ MyMuon MyEventSelection::MyMuonConverter(const pat::Muon& iMuon, TString& dirtag
 
   myhistos_["reliso_"+dirtag]->Fill(iso[3]);
   myhistos_["lowreliso_"+dirtag]->Fill(iso[3]);
+
+  //PF ISo for standard PAT muon
+  double pfRelIso = -999.0;
+  try{
+    //std::cout<<"check muon iso "<<iMuon.userIsolation("User1Iso")<<"  "<<iMuon.userIsolation("PfNeutralHadronIso")<<std::endl;
+    pfRelIso = (iMuon.userIsolation("User1Iso") + std::max(0., iMuon.userIsolation("PfNeutralHadronIso") + iMuon.userIsolation("PfGammaIso") - 0.5*iMuon.userIsolation("User2Iso")))/iMuon.pt();
+  }catch(std::exception &e){}
+  newMuon.UserPFRelIso = pfRelIso;
 
   return newMuon;
 }

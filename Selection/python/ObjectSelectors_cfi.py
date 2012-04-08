@@ -10,7 +10,7 @@ BaseTriggerSet = cms.PSet( source = cms.InputTag("TriggerResults::HLT"),
 BaseVertexSet = cms.PSet( vertexSource = cms.InputTag("offlinePrimaryVertices"),
                           maxZ = cms.double(24),
                           maxRho = cms.double(2.0),
-                          minNDOF = cms.int32(5),
+                          minNDOF = cms.int32(4),
                           beamSpotSource = cms.InputTag("offlineBeamSpot"),
                           useBeamSpot = cms.bool(True)
                           )
@@ -74,7 +74,7 @@ BaseElectronsSet =  cms.PSet(sources = cms.VInputTag("selectedPatElectrons", "se
                              )
 
 #my base values for jet selection -----------------------------------------------
-BaseJetsSet = cms.PSet(sources = cms.VInputTag("selectedPatJetsAK5PF","selectedPatJetsPFlow"),
+BaseJetsSet = cms.PSet(sources = cms.VInputTag("selectedPatJets","selectedPatJetsPFlow"),
                        CaloJetId = cms.PSet( version = cms.string("PURE09"), quality = cms.string("LOOSE") ),
                        PFJetId = cms.PSet( version = cms.string("FIRSTDATA"), quality = cms.string("LOOSE") ),
                        dedxSource = cms.InputTag("dedxHarmonic2"),
@@ -87,7 +87,7 @@ BaseJetsSet = cms.PSet(sources = cms.VInputTag("selectedPatJetsAK5PF","selectedP
                        )
 
 #my base values for tau selection -----------------------------------------------
-BaseTausSet = cms.PSet(sources = cms.VInputTag("selectedPatTausHpsPFTau", "selectedPatTausPFlow"),
+BaseTausSet = cms.PSet(sources = cms.VInputTag("selectedPatTaus", "selectedPatTausPFlow"),
                        minPt                    = cms.double(10.0),
                        maxEta                   = cms.double(2.4),    
                        minDeltaRtoLeptons       = cms.double(0.3), 

@@ -39,6 +39,7 @@ class MyMuon
   double ECaloIso; 
   double HCaloIso; 
   double RelIso;
+  double UserPFRelIso;
   
   int GlobalMuonPromptTight;
   double normChi2;

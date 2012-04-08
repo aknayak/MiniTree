@@ -13,17 +13,18 @@ def configureTauProduction(process, isMC=False) :
     #process.load("RecoTauTag.RecoTau.CaloRecoTauDiscriminationAgainstMuon_cfi")
     if(not isMC):
         removeMCMatching(process,['Taus'])
-    switchToPFTauShrinkingCone(process)
+    switchToPFTauHPS(process)
+    #switchToPFTauShrinkingCone(process)
     #addTauCollection(process,
     #                 tauCollection = cms.InputTag('caloRecoTauProducer'),
     #                 algoLabel = "caloReco",
     #                 typeLabel = "Tau"
     #                 )
-    addTauCollection(process,
-                     tauCollection = cms.InputTag('hpsPFTauProducer'),
-                     algoLabel = "hps",
-                     typeLabel = "PFTau"
-                     )
+#    addTauCollection(process,
+#                     tauCollection = cms.InputTag('hpsPFTauProducer'),
+#                     algoLabel = "hps",
+#                     typeLabel = "PFTau"
+#                     )
 #    addTauCollection(process,
 #                     tauCollection = cms.InputTag('hpsTancTaus'),
 #                     algoLabel = "hpsTanc",

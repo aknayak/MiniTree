@@ -219,7 +219,9 @@ MyElectron MyEventSelection::MyElectronConverter(const pat::Electron& iEle, Ecal
   }
   
   //isolation
-  std::vector<double> iso = defaultElectronIsolation(iEle);
+  bool isPF = false;
+  if(dirtag.Contains("PFlow"))isPF = true;
+  std::vector<double> iso = defaultElectronIsolation(iEle, isPF);
   newElectron.TrkIso = iso[0];
   newElectron.ECalIso = iso[1];
   newElectron.HCalIso = iso[2];

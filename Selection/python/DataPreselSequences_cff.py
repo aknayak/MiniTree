@@ -39,7 +39,7 @@ def defineBasePreSelection(process,
     # good vertex filter ---------------------------------------------------------
     process.primaryVertexFilter = cms.EDFilter("GoodVertexFilter",
                                                vertexCollection = cms.InputTag('offlinePrimaryVertices'),
-                                               minimumNDOF = cms.uint32(4),
+                                               minimumNDOF = cms.uint32(3),
                                                maxAbsZ = cms.double(24),
                                                maxd0 = cms.double(2) )
 

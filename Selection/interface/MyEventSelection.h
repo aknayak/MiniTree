@@ -2,7 +2,7 @@
 //
 // Original Author:  Aruna Kumar Nayak
 //         Created:  Fri Mar 11 12:42:51 WET 2011
-// $Id$
+// $Id: MyEventSelection.h,v 1.2 2012/01/16 11:10:47 anayak Exp $
 //
 //
 
@@ -77,7 +77,7 @@ public:
   std::vector<MyVertex> getVertices(const edm::Event&, const edm::EventSetup&);
   MyVertex MyVertexConverter(const reco::Vertex&);
   std::vector<MyJet> getJets(const edm::Event&, const edm::EventSetup&);
-  MyJet MyJetConverter(const pat::Jet&, TString&);
+  MyJet MyJetConverter(const pat::Jet&, TString&, const std::vector<pat::Tau> *tauColl);
   std::vector<MyMET> getMETs(const edm::Event&, const edm::EventSetup&);
   MyMET MyMETConverter(const pat::MET&, TString&);
   std::vector<MyElectron> getElectrons(const edm::Event&, const edm::EventSetup&);
@@ -102,6 +102,7 @@ public:
   int assignDYchannel(const edm::Event&, const edm::EventSetup&);
   int assignWJets(const edm::Event&, const edm::EventSetup&);
   int assignTTEvent(const edm::Event&, const edm::EventSetup&);
+  pat::Tau* getTauMatchedtoJet(const pat::Jet& iJet, const std::vector<pat::Tau> *tauColl);
 
   // ---- General MyEventSelection information.
   //void BookHistos(edm::Service<TFileService>);
