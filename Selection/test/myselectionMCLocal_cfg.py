@@ -4,24 +4,19 @@ import FWCore.ParameterSet.Config as cms
 from MiniTree.Selection.LocalRunSkeleton_cff import *
 
 
-#tau stuff
-from MiniTree.Selection.TauExtra_cff import *
-#PFlow
-from MiniTree.Selection.pfToPatSequences_cff import *
-
-
-process.maxEvents.input = cms.untracked.int32(200)
+process.maxEvents.input = cms.untracked.int32(500)
 process.TFileService.fileName = cms.string('mc_tau.root')
 
 # config parameters ------------------------------------------------------------
 procName='LOCALUSER'
-process.source.fileNames = ["file:/lustre/lip.pt/data/cmslocal/samples/CMSSW_4_2_X/mc/TT_TuneZ2_7TeV-pythia6-tauola-AODSIM/FEEE3638-F297-E011-AAF8-00304867BEC0.root"]
+#process.source.fileNames = ["file:/sps/cms/anayak/LocalData/relval-CMSSW523/relvalTTBar-CMSSW523-AODSIM-START52_V5-v1_numEvent1000.root"]
+process.source.fileNames = ["file:/sps/cms/anayak/LocalData/WToTauNu_TuneZ2star_8TeV_pythia6_tauola-U_S7_START50_V15-v1_numEvent10000.root"]
 trigMenu = 'HLT'
 isData=False
 isAOD=True
 isFastsim = False
 #mutriglist = [ 'HLT_Mu15_v2' ]
-mutriglist = [ 'HLT_IsoMu17_v5' ]
+mutriglist = [ 'HLT_IsoMu24_eta2p1_v8' ]
 egtriglist = [ 'HLT_Ele27_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_v2']
 jettriglist = [ 'HLT_Jet30_v1' ]
 trigpath = ''
@@ -32,18 +27,25 @@ storeOutPath=False
 # start process configuration -------------------------------------------------
 process.setName_(procName)
 producePDFweights=False
-process.GlobalTag.globaltag = cms.string( 'START42_V13::All' )
+process.GlobalTag.globaltag = cms.string( 'START52_V5::All' )
 
 
 # configure the extra modules -------------------------------------------------
 if(addPF2PAT):
     print "**** Adding PF2PAT objects ****"
     addpf2PatSequence(process, not isData)
-defineBasePreSelection(process,False,False,not isFastsim and not isAOD)
+defineBasePreSelection(process,False,not isFastsim and not isAOD)
 
 #tau stuff
 configureTauProduction(process, not isData)
+configurePrePatMuon(process)
+configurePatMuonUserPFIso(process)
+configureDiMuonVetoFilter(process)
 
+if(addPF2PAT):
+    import PhysicsTools.PatAlgos.tools.helpers as patutils
+    patutils.massSearchReplaceAnyInputTag(process.muonPFIsolationDepositsSequence, cms.InputTag('pfSelectedMuons'), cms.InputTag('muons'))
+    
 addJetMETExtra(process,isData,applyResJEC,isAOD)
 addTriggerMatchExtra(process,egtriglist,mutriglist,jettriglist,False,trigMenu)
 defineGenUtilitiesSequence(process)
@@ -53,8 +55,8 @@ process.load('MiniTree.Selection.selection_cfi')
 process.myMiniTreeProducer.MCTruth.isData = cms.bool(isData)
 process.myMiniTreeProducer.MCTruth.sampleCode = cms.string('TTBAR')
 process.myMiniTreeProducer.MCTruth.producePDFweights = cms.bool(producePDFweights)
-process.myMiniTreeProducer.Taus.sources = cms.VInputTag("patTausHpsPFTau", "patTausPFlow")
-process.myMiniTreeProducer.minEventQualityToStore = cms.int32(2)
+process.myMiniTreeProducer.Taus.sources = cms.VInputTag("patTaus", "patTausPFlow")
+process.myMiniTreeProducer.minEventQualityToStore = cms.int32(0)
 process.myMiniTreeProducer.Trigger.source = cms.InputTag('TriggerResults::'+trigMenu)
 process.myMiniTreeProducer.Trigger.bits = cms.vstring()
 process.myMiniTreeProducer.Trigger.bits = mutriglist
@@ -65,16 +67,18 @@ process.myMiniTreeProducer.Trigger.bits.extend( jettriglist )
 
 # analysis sequence ------------------------------------------------------------
 process.tau_extra = cms.Path(process.PFTau)
-process.jet_extra = cms.Path(process.FastJetSequence)
+process.muon_extra = cms.Path(process.produceMuonPFIsoPrePat)
 
-process.p  = cms.Path( process.basePreSel*process.myMiniTreeProducer)
+process.p  = cms.Path(process.allEventsFilter*process.basePreSel*process.diMuVetoFilter*process.myMiniTreeProducer)
+#process.p  = cms.Path( process.basePreSel*process.myMiniTreeProducer)
 
 if( addPF2PAT ):
     process.pat_default = cms.Path( process.patSequence * process.patDefaultSequence )
 else :
     process.pat_default = cms.Path( process.patDefaultSequence )
 
-process.schedule = cms.Schedule(process.jet_extra, process.tau_extra, process.pat_default, process.p)
+process.schedule = cms.Schedule(process.muon_extra, process.tau_extra, process.pat_default, process.p)
+#process.schedule = cms.Schedule(process.tau_extra, process.pat_default, process.p)
 checkProcessSchedule(storeOutPath,True)
 
 if(isAOD) :

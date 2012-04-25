@@ -38,9 +38,8 @@ def addTriggerMatchExtra(process, eleTrigList=['HLT_Ele10_LW_L1R'], muTrigList=[
 
         process.MuonsTrigMatch = cleanMuonTriggerMatchHLTMu20.clone()
         process.MuonsTrigMatch.src = cms.InputTag("selectedPatMuons")
-        #process.patMuons.pathNames = cms.vstring(muTrigList)
-        #process.MuonsTrigMatch.matchedCuts = cms.string( muTrig )
-        process.MuonsTrigMatch.matchedCuts = cms.string( 'path( "HLT_*" )' )
+        process.MuonsTrigMatch.matchedCuts = cms.string( muTrig )
+        #process.MuonsTrigMatch.matchedCuts = cms.string( 'path( "HLT_*" )' )
         trigMatchModules.append('MuonsTrigMatch')
 
         if(addPF2PAT):        
@@ -54,9 +53,8 @@ def addTriggerMatchExtra(process, eleTrigList=['HLT_Ele10_LW_L1R'], muTrigList=[
 
         process.ElectronsTrigMatch = cleanElectronTriggerMatchHLTEle27CaloIdVTCaloIsoTTrkIdTTrkIsoT.clone()
         process.ElectronsTrigMatch.src = cms.InputTag("selectedPatElectrons")
-        #process.ElectronsTrigMatch.pathNames = cms.vstring(eleTrigList)
-        #process.ElectronsTrigMatch.matchedCuts = cms.string( eleTrig )
-        process.ElectronsTrigMatch.matchedCuts = cms.string( 'path( "HLT_*" )' )
+        process.ElectronsTrigMatch.matchedCuts = cms.string( eleTrig )
+        #process.ElectronsTrigMatch.matchedCuts = cms.string( 'path( "HLT_*" )' )
         trigMatchModules.append('ElectronsTrigMatch')
 
         if(addPF2PAT):
@@ -70,9 +68,8 @@ def addTriggerMatchExtra(process, eleTrigList=['HLT_Ele10_LW_L1R'], muTrigList=[
 
         process.JetsTrigMatch = cleanJetTriggerMatchHLTJet240.clone()
         process.JetsTrigMatch.src = cms.InputTag("selectedPatJets")
-        #process.JetsTrigMatch.pathNames = cms.vstring(jetTrigList)
-        #process.JetsTrigMatch.matchedCuts = cms.string( jetTrig )
-        process.JetsTrigMatch.matchedCuts = cms.string( 'path( "HLT_*" )' )
+        process.JetsTrigMatch.matchedCuts = cms.string( jetTrig )
+        #process.JetsTrigMatch.matchedCuts = cms.string( 'path( "HLT_*" )' )
         trigMatchModules.append('JetsTrigMatch')
         
         #process.JetsAK5PFTrigMatch = process.JetsTrigMatch.clone()

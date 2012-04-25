@@ -135,6 +135,10 @@ SampleInfo MyEventSelection::getSampleInfo(const edm::Event& iEvent, const edm::
 
   mcInfo.pileup = pu;
   
+  myhistos_["intimepu"]->Fill(npuVertices_);
+  myhistos_["outoftimepu"]->Fill(nOOTpuVertices_);
+  myhistos_["totalpu"]->Fill(npuVertices_+nOOTpuVertices_);
+  
   //pu-reweight
   const edm::EventBase* iEventB = dynamic_cast<const edm::EventBase*>(&iEvent);
   double puweight = LumiWeights_.weight( (*iEventB) );

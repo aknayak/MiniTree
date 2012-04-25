@@ -29,7 +29,7 @@ def addpf2PatSequence(process, runOnMC) :
     enablePileUpCorrection( process, postfix=postfix)
                                                         
     #switch to hpsPFTau
-    adaptPFTaus(process,"hpsPFTau",postfix=postfix)
+    #adaptPFTaus(process,"hpsPFTau",postfix=postfix) # already hpsPFTau in 52X
     #remove tau selection
     getattr(process,"pfTaus"+postfix).discriminators = [cms.PSet(
                 discriminator=cms.InputTag("pfTausBaseDiscriminationByDecayModeFinding"+postfix),
@@ -49,16 +49,8 @@ def addpf2PatSequence(process, runOnMC) :
     getattr(process,"pfNoJet"+postfix).enable = True
     getattr(process,"pfNoMuon"+postfix).verbose = False
 
-    #fix isolation to use a cone of 0.3 for both electrons and muons
-    applyPostfix(process,"isoValMuonWithNeutral",postfix).deposits[0].deltaR = cms.double(0.3)
-    applyPostfix(process,"isoValMuonWithCharged",postfix).deposits[0].deltaR = cms.double(0.3)
-    applyPostfix(process,"isoValMuonWithPhotons",postfix).deposits[0].deltaR = cms.double(0.3)
-    applyPostfix(process,"isoValElectronWithNeutral",postfix).deposits[0].deltaR = cms.double(0.3)
-    applyPostfix(process,"isoValElectronWithCharged",postfix).deposits[0].deltaR = cms.double(0.3)
-    applyPostfix(process,"isoValElectronWithPhotons",postfix).deposits[0].deltaR = cms.double(0.3)
-
-    applyPostfix(process,"pfIsolatedMuons",postfix).combinedIsolationCut = cms.double(9999.)
-    applyPostfix(process,"pfIsolatedElectrons",postfix).combinedIsolationCut = cms.double(9999.)
+    applyPostfix(process,"pfIsolatedMuons",postfix).isolationCut = cms.double(9999.)
+    applyPostfix(process,"pfIsolatedElectrons",postfix).isolationCut = cms.double(9999.)
     
     #CiC electron ID
     process.load( "RecoEgamma.ElectronIdentification.cutsInCategoriesElectronIdentificationV06_cfi" )

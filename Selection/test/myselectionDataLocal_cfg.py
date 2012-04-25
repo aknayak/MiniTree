@@ -4,18 +4,12 @@ import FWCore.ParameterSet.Config as cms
 from MiniTree.Selection.LocalRunSkeleton_cff import *
 
 
-#tau stuff
-from MiniTree.Selection.TauExtra_cff import *
-#PFlow
-from MiniTree.Selection.pfToPatSequences_cff import *
-
-
-process.maxEvents.input = cms.untracked.int32(200)
-process.TFileService.fileName = cms.string('data_tau_1.root')
+process.maxEvents.input = cms.untracked.int32(1000)
+process.TFileService.fileName = cms.string('data_tau.root')
 
 # config parameters ------------------------------------------------------------
 procName='LOCALUSER'
-process.source.fileNames = ['file:/lustre/lip.pt/data/cmslocal/samples/CMSSW_4_2_X/data/Run2011A-SingleElectron-AOD/E2599C3F-C487-E011-B415-0019B9F72BFF.root']
+process.source.fileNames = ['file:/sps/cms/anayak/LocalData/Run2012A-SingleMu-AOD-PromptReco-v1/Run2012A-SingleMu-AOD-190731-7CF056BD-B383-E111-8787-003048CF94A6.root']
 mutriglist = ['HLT_IsoMu24_v4']
 egtriglist = ['HLT_Ele32_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v3']
 jettriglist = ['HLT_Jet30U_v3']
@@ -31,18 +25,23 @@ storeOutPath = False
 
 # start process configuration -------------------------------------------------
 process.setName_(procName)
-#process.GlobalTag.globaltag = cms.string( 'GR_R_42_V12::All' )
-process.GlobalTag.globaltag = cms.string( 'GR_R_42_V19::All' )
+process.GlobalTag.globaltag = cms.string( 'GR_R_52_V7::All' )
 
 # configure the extra modules -------------------------------------------------
 if(addPF2PAT):
     print "**** Adding PF2PAT objects ****"
     addpf2PatSequence(process, not isData)
-defineBasePreSelection(process,False,False,True,trigpath,egtriglist,mutriglist,jettriglist)
+defineBasePreSelection(process,False,True,trigpath,egtriglist,mutriglist,jettriglist)
 
 #tau stuff
 configureTauProduction(process, not isData)
-
+#muon user iso
+configurePrePatMuon(process)
+configurePatMuonUserPFIso(process)
+if(addPF2PAT):
+    import PhysicsTools.PatAlgos.tools.helpers as patutils
+    patutils.massSearchReplaceAnyInputTag(process.muonPFIsolationDepositsSequence, cms.InputTag('pfSelectedMuons'), cms.InputTag('muons'))
+            
 addJetMETExtra(process,isData,applyResJEC,isAOD)
 addTriggerMatchExtra(process,egtriglist,mutriglist,jettriglist,addPF2PAT,trigMenu)
 
@@ -51,8 +50,8 @@ addTriggerMatchExtra(process,egtriglist,mutriglist,jettriglist,addPF2PAT,trigMen
 process.load('MiniTree.Selection.selection_cfi')
 process.myMiniTreeProducer.MCTruth.isData = cms.bool(isData)
 process.myMiniTreeProducer.MCTruth.sampleCode = cms.string('DATA')
-process.myMiniTreeProducer.Taus.sources = cms.VInputTag("patTausHpsPFTau", "patTausPFlow")
-process.myMiniTreeProducer.minEventQualityToStore = cms.int32(2)
+process.myMiniTreeProducer.Taus.sources = cms.VInputTag("patTaus", "patTausPFlow")
+process.myMiniTreeProducer.minEventQualityToStore = cms.int32(0)
 process.myMiniTreeProducer.Trigger.source = cms.InputTag('TriggerResults::'+trigMenu)
 process.myMiniTreeProducer.Trigger.bits = cms.vstring()
 process.myMiniTreeProducer.Trigger.bits = mutriglist
@@ -62,17 +61,17 @@ process.myMiniTreeProducer.Trigger.bits.extend( jettriglist )
 ########################################################
 
 # analysis sequence ------------------------------------------------------------
-process.tau_extra = cms.Path(process.PFTau)
-process.jet_extra = cms.Path(process.FastJetSequence)
+process.muon_extra = cms.Path(process.produceMuonPFIsoPrePat)
 
-process.p  = cms.Path( process.basePreSel*process.myMiniTreeProducer)
+#process.p  = cms.Path( process.basePreSel*process.myMiniTreeProducer)
+process.p  = cms.Path( process.myMiniTreeProducer)
 
 if( addPF2PAT ):
     process.pat_default = cms.Path( process.patSequence * process.patDefaultSequence )
 else :
     process.pat_default = cms.Path( process.patDefaultSequence )
 
-process.schedule = cms.Schedule(process.jet_extra, process.tau_extra, process.pat_default, process.p)
+process.schedule = cms.Schedule(process.muon_extra, process.pat_default, process.p)
 checkProcessSchedule(storeOutPath,True)
 
 if(isAOD) :

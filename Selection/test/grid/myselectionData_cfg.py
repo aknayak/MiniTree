@@ -2,11 +2,6 @@ import FWCore.ParameterSet.Config as cms
 
 from MiniTree.Selection.LocalRunSkeleton_cff import *
 
-#tau stuff
-from MiniTree.Selection.TauExtra_cff import *
-#PFlow
-from MiniTree.Selection.pfToPatSequences_cff import *
-
 procName = 'USER'
 mutrigstring = '@mutrig'
 mutriglist = mutrigstring.split('+')
@@ -32,14 +27,20 @@ process.GlobalTag.globaltag = cms.string( '@globaltag' )
 if(addPF2PAT):
     print "**** Adding PF2PAT objects ****"
     addpf2PatSequence(process, not isData)
-defineBasePreSelection(process,False,False,True,trigpath,egtriglist,mutriglist,jettriglist)
+defineBasePreSelection(process,False,True,trigpath,egtriglist,mutriglist,jettriglist)
 addJetMETExtra(process,isData, applyResJEC,isaod)
 addTriggerMatchExtra(process,egtriglist,mutriglist,jettriglist,addPF2PAT,trigMenu)
 
 
 #tau stuff
 configureTauProduction(process, not isData)
-
+#muon user iso
+configurePrePatMuon(process)
+configurePatMuonUserPFIso(process)
+if(addPF2PAT):
+    import PhysicsTools.PatAlgos.tools.helpers as patutils
+    patutils.massSearchReplaceAnyInputTag(process.muonPFIsolationDepositsSequence, cms.InputTag('pfSelectedMuons'), cms.InputTag('muons'))
+    
 
 # analysis modules -------------------------------------------------------------
 process.load("MiniTree.Selection.@myplugin_cfi")
@@ -49,7 +50,7 @@ process.myMiniTreeProducer.MCTruth.sampleCode = cms.string('@cs')
 process.myMiniTreeProducer.Muons.id = cms.string('AllGlobalMuons')
 
 # Default Taus
-process.myMiniTreeProducer.Taus.sources = cms.VInputTag("patTausHpsPFTau", "patTausPFlow");
+process.myMiniTreeProducer.Taus.sources = cms.VInputTag("patTaus", "patTausPFlow");
 
 process.myMiniTreeProducer.minEventQualityToStore = cms.int32(2)
 process.myMiniTreeProducer.MCTruth.isData = cms.bool(isData)
@@ -59,8 +60,7 @@ process.myMiniTreeProducer.Trigger.bits.extend( egtriglist )
 process.myMiniTreeProducer.Trigger.bits.extend( jettriglist )
 
 # analysis sequence --------------------------------------------------------------
-process.tau_extra = cms.Path(process.PFTau)
-process.jet_extra = cms.Path(process.FastJetSequence)
+process.muon_extra = cms.Path(process.produceMuonPFIsoPrePat)
 
 process.p  = cms.Path( process.basePreSel*process.myMiniTreeProducer)
 
@@ -69,7 +69,7 @@ if( addPF2PAT ):
 else :
     process.pat_default = cms.Path( process.patDefaultSequence )   
 
-process.schedule = cms.Schedule(process.jet_extra, process.tau_extra, process.pat_default, process.p)
+process.schedule = cms.Schedule(process.muon_extra, process.pat_default, process.p)
 checkProcessSchedule(storeOutPath,True)
 
 if(isaod) :

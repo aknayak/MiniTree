@@ -5,7 +5,6 @@ import FWCore.ParameterSet.Config as cms
 #
 def defineBasePreSelection(process,
                            useTechTriggerBits=False,
-                           correctForEEmisalignment=False,
                            filterHBHEnoise=True,
                            egmuTriggerFilter='',
                            egtriglist=['HLT_Ele10_LW_L1R'],
@@ -14,21 +13,12 @@ def defineBasePreSelection(process,
                            trigMenu='HLT') :
 
     #
-    # re-reco sequences
-    #
-    
-    # correct for EE misalignment -------------------------------------------
-    if(correctForEEmisalignment) :
-        process.load('RecoEgamma.EgammaTools.correctedElectronsProducer_cfi')
-        print '   GSF electrons will be reprocessed : add process.baseReReco to your standard sequence'
-        process.baseReReco = cms.Sequence( process.gsfElectrons )
-
-
-    #
     # pre-selection sequences
     #
     
     # cut on monster events (may low quality tracks) -------------------------------
+    process.load("HLTrigger.special.hltPhysicsDeclared_cfi")
+    process.hltPhysicsDeclared.L1GtReadoutRecordTag = 'gtDigis'
     process.noScraping= cms.EDFilter("FilterOutScraping",
                                      applyfilter = cms.untracked.bool(True),
                                      debugOn = cms.untracked.bool(False), ## Or 'True' to get some per-event info
@@ -45,7 +35,7 @@ def defineBasePreSelection(process,
 
 
     print "*** Base preselection will remove PKAM and filter primary vertices"
-    process.basePreSel = cms.Sequence(process.noScraping*process.primaryVertexFilter)
+    process.basePreSel = cms.Sequence(process.hltPhysicsDeclared*process.noScraping*process.primaryVertexFilter)
     
     # BSC activity ---------------------------------------------------------------
     if(useTechTriggerBits) :

@@ -7,14 +7,14 @@ from PhysicsTools.PatAlgos.tools.cmsswVersionTools import *
         
 def addJetMETExtra(process, isData=False, applyResJEC=True, isAOD=False) :
 
-    process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
+    #process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
     ##-------------------- Import the Jet RECO modules -----------------------
-    process.load('RecoJets.Configuration.RecoPFJets_cff')
+    #process.load('RecoJets.Configuration.RecoPFJets_cff')
     ##-------------------- Turn-on the FastJet density calculation -----------------------
-    process.kt6PFJets.doRhoFastjet = True
+    #process.kt6PFJets.doRhoFastjet = True
     ##-------------------- Turn-on the FastJet jet area calculation for your favorite algorithm -----------------------
-    process.ak5PFJets.doAreaFastjet = True
-    process.FastJetSequence = cms.Sequence(process.kt6PFJets * process.ak5PFJets)
+    #process.ak5PFJets.doAreaFastjet = True
+    #process.FastJetSequence = cms.Sequence(process.kt6PFJets * process.ak5PFJets)
     if(isData) :
         if(applyResJEC) :
             corrections = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual', 'L5Flavor', 'L7Parton']
@@ -24,9 +24,9 @@ def addJetMETExtra(process, isData=False, applyResJEC=True, isAOD=False) :
     else :
         corrections = ['L1FastJet','L2Relative','L3Absolute','L5Flavor','L7Parton']
     if( isAOD ) : process.patJets.addTagInfos   = cms.bool(False)
-
-    #from PhysicsTools.PatAlgos.recoLayer0.jetCorrFactors_cfi import *
-    #process.patJetCorrFactors.levels = ['L1Offset', 'L2Relative', 'L3Absolute']
+    
+    from PhysicsTools.PatAlgos.recoLayer0.jetCorrFactors_cfi import *
+    process.patJetCorrFactors.levels = ['L1Offset', 'L2Relative', 'L3Absolute']
     process.patJetCorrFactors.useRho = cms.bool(True)
     
     print "*** Switching to PF ak5 jets ***"
