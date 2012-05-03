@@ -245,14 +245,14 @@ MyElectron MyEventSelection::MyElectronConverter(const pat::Electron& iEle, Ecal
       if(int(id_value) & 0x1){
 	myhistos_["cic_id_"+dirtag]->Fill(iid_cic);
       }
-      myhistos_["cic_id_"+dirtag]->GetXaxis()->SetBinLabel(iid_cic, id_name.c_str());
+      myhistos_["cic_id_"+dirtag]->GetXaxis()->SetBinLabel(iid_cic+1, id_name.c_str());
     }
     else{
       iid_vbtf++;
       if(int(id_value) & 0x1){
 	myhistos_["vbtf_id_"+dirtag]->Fill(iid_vbtf);
       }
-      myhistos_["vbtf_id_"+dirtag]->GetXaxis()->SetBinLabel(iid_vbtf, id_name.c_str());
+      myhistos_["vbtf_id_"+dirtag]->GetXaxis()->SetBinLabel(iid_vbtf+1, id_name.c_str());
     }
     
   }

@@ -151,6 +151,7 @@ SampleInfo MyEventSelection::getSampleInfo(const edm::Event& iEvent, const edm::
   puW.push_back(puweightDefault);
   //puW.push_back(puweightOOT);
   //puW.push_back(puweightDefaultOOT);
+  mcInfo.puWeights = puW;
 
   return mcInfo;
 }
