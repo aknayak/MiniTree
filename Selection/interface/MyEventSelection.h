@@ -2,7 +2,7 @@
 //
 // Original Author:  Aruna Kumar Nayak
 //         Created:  Fri Mar 11 12:42:51 WET 2011
-// $Id: MyEventSelection.h,v 1.2 2012/01/16 11:10:47 anayak Exp $
+// $Id: MyEventSelection.h,v 1.3 2012/04/08 16:52:53 anayak Exp $
 //
 //
 
@@ -98,6 +98,7 @@ public:
   
   static bool sumPtOrder(const reco::Vertex *, const reco::Vertex *);
   std::vector<double> defaultMuonIsolation(const pat::Muon&, bool isPF=false);
+  std::vector<double> defaultPFMuonIsolation(const pat::Muon&);
   std::vector<double> defaultElectronIsolation(const pat::Electron&, bool isPF=false);
   int assignDYchannel(const edm::Event&, const edm::EventSetup&);
   int assignWJets(const edm::Event&, const edm::EventSetup&);

@@ -23,7 +23,7 @@ egtriglist = [ 'HLT_Ele27_CaloIdT_CaloIsoT_TrkIdT_TrkIsoT_v2']
 jettriglist = [ 'HLT_Jet30_v1' ]
 trigpath = ''
 applyResJEC=False
-addPF2PAT=True
+addPF2PAT=False
 storeOutPath=False
 
 # start process configuration -------------------------------------------------
@@ -38,16 +38,7 @@ if(addPF2PAT):
     addpf2PatSequence(process, not isData)
 defineBasePreSelection(process,False,not isFastsim and not isAOD)
 
-#tau stuff
 configureTauProduction(process, not isData)
-configurePrePatMuon(process)
-configurePatMuonUserPFIso(process)
-configureDiMuonVetoFilter(process)
-
-if(addPF2PAT):
-    import PhysicsTools.PatAlgos.tools.helpers as patutils
-    patutils.massSearchReplaceAnyInputTag(process.muonPFIsolationDepositsSequence, cms.InputTag('pfSelectedMuons'), cms.InputTag('muons'))
-    
 addJetMETExtra(process,isData,applyResJEC,isAOD)
 addTriggerMatchExtra(process,egtriglist,mutriglist,jettriglist,False,trigMenu)
 defineGenUtilitiesSequence(process)
@@ -69,9 +60,8 @@ process.myMiniTreeProducer.Trigger.bits.extend( jettriglist )
 
 # analysis sequence ------------------------------------------------------------
 process.tau_extra = cms.Path(process.PFTau)
-process.muon_extra = cms.Path(process.produceMuonPFIsoPrePat)
 
-process.p  = cms.Path(process.allEventsFilter*process.basePreSel*process.diMuVetoFilter*process.myMiniTreeProducer)
+process.p  = cms.Path(process.allEventsFilter*process.basePreSel*process.myMiniTreeProducer)
 #process.p  = cms.Path( process.basePreSel*process.myMiniTreeProducer)
 
 if( addPF2PAT ):
@@ -79,8 +69,8 @@ if( addPF2PAT ):
 else :
     process.pat_default = cms.Path( process.patDefaultSequence )
 
-process.schedule = cms.Schedule(process.muon_extra, process.tau_extra, process.pat_default, process.p)
-#process.schedule = cms.Schedule(process.tau_extra, process.pat_default, process.p)
+process.schedule = cms.Schedule(process.tau_extra, process.pat_default, process.p)
+
 checkProcessSchedule(storeOutPath,True)
 
 if(isAOD) :

@@ -39,12 +39,20 @@ class MyMuon
   double ECaloIso; 
   double HCaloIso; 
   double RelIso;
+  double ChHadIso; 
+  double PhotonIso;  
+  double NeuHadIso;  
+  double PileupIso;
+  double pfRelIso;
   double UserPFRelIso;
   
   int GlobalMuonPromptTight;
   double normChi2;
   int nHits;
   int nMuonHits;
+  int nPixelHits;
+  int nMatchedStations;
+  int nTrackerLayers;
   double inTrk_normChi2;
   double inTrk_nHits;
   

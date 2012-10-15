@@ -43,11 +43,13 @@ BaseMuonsSet =  cms.PSet( sources = cms.VInputTag("selectedPatMuons","selectedPa
                           onlyGlobal = cms.bool(True),
                           id = cms.string('GlobalMuonPromptTight'),
                           maxD0 = cms.double(200),
-                          maxRelIso = cms.double(0.25),
+                          maxRelIso = cms.double(0.3),
                           useDefaultIso = cms.bool(True),
                           maxTrackChi2 = cms.double(10),
-                          minTrackValidHits = cms.int32(10),
-                          minValidHits = cms.int32(0)
+                          minMuonHits = cms.int32(0),
+                          minPixelHits = cms.int32(0),
+                          minMatchStations = cms.int32(1),
+                          minTrackerLayers = cms.int32(5)
                           )
 
 

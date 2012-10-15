@@ -20,8 +20,10 @@ std::vector<MyMuon> MyEventSelection::getMuons(const edm::Event& iEvent, const e
     double maxRelIso = configParamsMuons_.getParameter<double>("maxRelIso");
     //bool useDefaultIso = configParamsMuons_.getParameter<bool>("useDefaultIso");
     double maxTrackChi2 = configParamsMuons_.getParameter<double>("maxTrackChi2");
-    int minTrackHits = configParamsMuons_.getParameter<int>("minTrackValidHits");
-    int minHits = configParamsMuons_.getParameter<int>("minValidHits");
+    int minMuonHits = configParamsMuons_.getParameter<int>("minMuonHits");
+    int minPixelHits = configParamsMuons_.getParameter<int>("minPixelHits");
+    int minMatchStations = configParamsMuons_.getParameter<int>("minMatchStations");
+    int minTrackerLayers = configParamsMuons_.getParameter<int>("minTrackerLayers");
     bool onlyGlobal = configParamsMuons_.getParameter<bool>("onlyGlobal");
     std::string triggerMatch = configParamsMuons_.getParameter<std::string>("triggerMatch");
 
@@ -67,13 +69,18 @@ std::vector<MyMuon> MyEventSelection::getMuons(const edm::Event& iEvent, const e
 	      if(mIt.muonID(id) <= 0)passId = false;
 	      if(newMuon.normChi2 > maxTrackChi2)passId = false;
 	      if(fabs(newMuon.D0*10000) > maxD0)passId = false;
-	      if(newMuon.inTrk_nHits < minTrackHits)passId = false;
-	      if(newMuon.nHits < minHits)passId = false;
+	      //if(newMuon.inTrk_nHits < minTrackHits)passId = false;
+	      //if(newMuon.nHits < minHits)passId = false;
+	      if(newMuon.nMuonHits <= minMuonHits)passId = false;
+	      if(newMuon.nMatchedStations < minMatchStations)passId = false;
+	      if(newMuon.nPixelHits <= minPixelHits) passId = false;
+	      if(newMuon.nTrackerLayers < minTrackerLayers)passId = false;
+	      
 	      bool isGlobal=false;
 	      if(mIt.isGlobalMuon() && mIt.isTrackerMuon())isGlobal=true;
 	      if(onlyGlobal && !isGlobal)passId = false;
 	      //iso
-	      if(newMuon.RelIso > maxRelIso)passIso = false;
+	      if(newMuon.pfRelIso > maxRelIso)passIso = false;
 	      int quality = 0;
 	      if(passKin)quality  = 1;
 	      //std::cout<<"muon quality "<<quality<<std::endl;
@@ -149,7 +156,8 @@ MyMuon MyEventSelection::MyMuonConverter(const pat::Muon& iMuon, TString& dirtag
     {
       newMuon.inTrk_normChi2 = mTrack->normalizedChi2();
       newMuon.inTrk_nHits = mTrack->numberOfValidHits();
-
+      newMuon.nPixelHits = mTrack->hitPattern().numberOfValidPixelHits();
+      newMuon.nTrackerLayers = mTrack->hitPattern().trackerLayersWithMeasurement();
       reco::TransientTrack transienttrack = trackBuilder->build(mTrack);
       if((&refVertex_))
 	{
@@ -170,6 +178,8 @@ MyMuon MyEventSelection::MyMuonConverter(const pat::Muon& iMuon, TString& dirtag
       }
     }
 
+  newMuon.nMatchedStations = iMuon.numberOfMatchedStations();
+
   if(iMuon.isEnergyValid() ){
     const reco::MuonEnergy me = iMuon.calEnergy();
     newMuon.HadEnergy = me.had + me.ho;
@@ -188,7 +198,18 @@ MyMuon MyEventSelection::MyMuonConverter(const pat::Muon& iMuon, TString& dirtag
   myhistos_["reliso_"+dirtag]->Fill(iso[3]);
   myhistos_["lowreliso_"+dirtag]->Fill(iso[3]);
 
-  //PF ISo for standard PAT muon
+  //PF isolation (also for recomuon) only above 52X
+  std::vector<double> pfiso = defaultPFMuonIsolation(iMuon); 
+  newMuon.ChHadIso = pfiso[0]; 
+  newMuon.PhotonIso = pfiso[1]; 
+  newMuon.NeuHadIso = pfiso[2]; 
+  newMuon.PileupIso = pfiso[3];
+  newMuon.pfRelIso = pfiso[4]; 
+ 
+  myhistos_["relpfiso_"+dirtag]->Fill(pfiso[3]); 
+  myhistos_["lowrelpfiso_"+dirtag]->Fill(pfiso[3]); 
+
+  //User PF ISo for standard PAT muon
   double pfRelIso = -999.0;
   try{
     //std::cout<<"check muon iso "<<iMuon.userIsolation("User1Iso")<<"  "<<iMuon.userIsolation("PfNeutralHadronIso")<<std::endl;
@@ -221,5 +242,17 @@ std::vector<double> MyEventSelection::defaultMuonIsolation (const pat::Muon& muo
     values[2] = muon.hcalIso();
     values[3] = (muon.trackIso()+muon.ecalIso()+muon.hcalIso())/norm;
   }
+  return values;
+}
+
+std::vector<double> MyEventSelection::defaultPFMuonIsolation (const pat::Muon& muon) 
+{ 
+  std::vector<double> values(5,0); 
+  values[0] = muon.pfIsolationR04().sumChargedHadronPt; 
+  values[1] = muon.pfIsolationR04().sumPhotonEt; 
+  values[2] = muon.pfIsolationR04().sumNeutralHadronEt;
+  values[3] = muon.pfIsolationR04().sumPUPt;
+  values[4] = (muon.pfIsolationR04().sumChargedHadronPt + std::max(0., muon.pfIsolationR04().sumNeutralHadronEt+muon.pfIsolationR04().sumPhotonEt-0.5*muon.pfIsolationR04().sumPUPt))/muon.pt();
+
   return values;
 }

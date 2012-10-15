@@ -146,7 +146,7 @@ void MyEventSelection::Set(const edm::Event& e, const edm::EventSetup& es)
   std::vector<MyMuon> muons = event_.Muons;
   for(size_t imu = 0; imu < muons.size(); imu++){
     std::string algo = muons[imu].name;
-    if(algo.find("PFlow") == std::string::npos) continue;
+    //if(algo.find("PFlow") == std::string::npos) continue;
     bool passKin = false, passId = false, passIso = false;
     int quality = muons[imu].quality;
     if(quality & 0x1)passKin = true;
@@ -322,7 +322,8 @@ void MyEventSelection::BookHistos()
       myhistos_["id_"+rawtag] = dirs_[dirs_.size() - 1].make<TH1D>("id_"+rawtag, "Muon id", 20, 0, 20.);
       myhistos_["reliso_"+rawtag] = dirs_[dirs_.size() - 1].make<TH1D>("reliso_"+rawtag, "Muon reliso", 100, 0, 5.);
       myhistos_["lowreliso_"+rawtag] = dirs_[dirs_.size() - 1].make<TH1D>("lowreliso_"+rawtag, "Muon lowreliso", 100, 0, 1.);
-
+      myhistos_["relpfiso_"+rawtag] = dirs_[dirs_.size() - 1].make<TH1D>("relpfiso_"+rawtag, "Muon pf reliso", 100, 0, 5.); 
+      myhistos_["lowrelpfiso_"+rawtag] = dirs_[dirs_.size() - 1].make<TH1D>("lowrelpfiso_"+rawtag, "Muon pf lowreliso", 100, 0, 1.);
     }
   //Taus
   sources = configParamsTaus_.getParameter<std::vector<edm::InputTag> >("sources");

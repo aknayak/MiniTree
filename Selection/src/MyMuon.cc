@@ -9,21 +9,29 @@ MyMuon::MyMuon():
   idPattern(0),
   HadEnergy(-999.),
   EmEnergy(-999.),
-  TrkIso(-999.),
-  ECaloIso(-999.),
-  HCaloIso(-999.),
-  RelIso(-999.),
-  UserPFRelIso(-999.),
+  TrkIso(999.),
+  ECaloIso(999.),
+  HCaloIso(999.),
+  RelIso(999.),
+  ChHadIso(999.),  
+  PhotonIso(999.),   
+  NeuHadIso(999.),   
+  PileupIso(999.), 
+  pfRelIso(999.), 
+  UserPFRelIso(999.),
   GlobalMuonPromptTight(-1),
   normChi2(-999.),
   nHits(-999),
   nMuonHits(-999),
+  nPixelHits(-999),
+  nMatchedStations(-999),
+  nTrackerLayers(-999),
   inTrk_normChi2(-999.),
   inTrk_nHits(-999),
-  IP3D(-999),
-  IP3DErr(-999),
-  D0(-999.),
-  D0Inner(-999),
+  IP3D(999.),
+  IP3DErr(999.),
+  D0(999.),
+  D0Inner(999.),
   trigger_mu_pt(0),
   quality(0)
 {
@@ -47,21 +55,29 @@ void MyMuon::Reset()
   idPattern = 0;
   HadEnergy = -999.;
   EmEnergy = -999.;
-  TrkIso = -999.;
-  ECaloIso = -999.;
-  HCaloIso = -999.;
-  RelIso = -999.;
-  UserPFRelIso = -999.;
+  TrkIso = 999.;
+  ECaloIso = 999.;
+  HCaloIso = 999.;
+  RelIso = 999.;
+  ChHadIso = 999.;   
+  PhotonIso = 999.;    
+  NeuHadIso = 999.;    
+  PileupIso = 999.;  
+  pfRelIso = 999.;  
+  UserPFRelIso = 999.;
   GlobalMuonPromptTight = -1;
   normChi2 = -999.;
   nHits = -999;
   nMuonHits = -999;
+  nPixelHits = -999;
+  nMatchedStations = -999;
+  nTrackerLayers = -999;
   inTrk_normChi2 = -999.;
   inTrk_nHits = -999;
-  IP3D = -999;
-  IP3DErr = -999;
-  D0 = -999.;
-  D0Inner = -999;
+  IP3D = 999.;
+  IP3DErr = 999.;
+  D0 = 999.;
+  D0Inner = 999.;
   trigger_mu_pt = 0;
   quality = 0;
 }
