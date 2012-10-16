@@ -55,7 +55,7 @@ process.myMiniTreeProducer.Trigger.bits = cms.vstring()
 process.myMiniTreeProducer.Trigger.bits = mutriglist
 process.myMiniTreeProducer.Trigger.bits.extend( egtriglist )
 process.myMiniTreeProducer.Trigger.bits.extend( jettriglist )
-
+process.myMiniTreeProducer.KineFit.runKineFitter = cms.bool(False)
 ########################################################
 
 # analysis sequence ------------------------------------------------------------

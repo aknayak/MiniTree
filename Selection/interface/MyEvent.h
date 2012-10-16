@@ -11,7 +11,7 @@
 //
 // Original Author:  Aruna Kumar Nayak
 //         Created:  Tue Aug 23 16:11:19 WEST 2011
-// $Id$
+// $Id: MyEvent.h,v 1.1 2012/01/05 11:12:21 anayak Exp $
 //
 //
 
@@ -35,7 +35,7 @@
 #include "MiniTree/Selection/interface/MyTau.h"
 #include "MiniTree/Selection/interface/MyMCParticle.h"
 #include "MiniTree/Selection/interface/SampleInfo.h"
-
+#include "MiniTree/Selection/interface/MyKineFitParticle.h"
 
 class MyEvent
 {
@@ -63,6 +63,7 @@ class MyEvent
   //std::vector<MyTrack> tracks;
   std::vector<MyVertex> PrimaryVtxs;
   std::vector<MyMCParticle> mcParticles;
+  std::vector<MyKineFitParticle> KineFitParticles;
   MyMET mcMET;
   SampleInfo sampleInfo;
   

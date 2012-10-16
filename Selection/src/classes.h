@@ -9,6 +9,7 @@
 #include "MiniTree/Selection/interface/MyMCParticle.h"
 #include "MiniTree/Selection/interface/SampleInfo.h"
 #include "MiniTree/Selection/interface/MomentumVec.h"
+#include "MiniTree/Selection/interface/MyKineFitParticle.h"
 
 #include<vector>
 #include "TROOT.h"
@@ -28,6 +29,7 @@ namespace{
     MyTau            Mytau; 
     MyMCParticle     Mymcparticle; 
     SampleInfo       sampleinfo;
+    MyKineFitParticle Mykinefitparticle;
     std::vector<MyVertex>         Myvertices; 
     std::vector<MyTrack>          Mytracks; 
     std::vector<MyJet>            Myjets; 
@@ -36,6 +38,7 @@ namespace{
     std::vector<MyMuon>           Mymuons; 
     std::vector<MyTau>            Mytaus; 
     std::vector<MyMCParticle>     Mymcparticles; 
+    std::vector<MyKineFitParticle> Mykinefitparticles;
     std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > > lvec;
     MyLorentzVector         vec;
     Point3D               point;  

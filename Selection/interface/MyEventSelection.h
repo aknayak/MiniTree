@@ -2,7 +2,7 @@
 //
 // Original Author:  Aruna Kumar Nayak
 //         Created:  Fri Mar 11 12:42:51 WET 2011
-// $Id: MyEventSelection.h,v 1.3 2012/04/08 16:52:53 anayak Exp $
+// $Id: MyEventSelection.h,v 1.4 2012/10/15 13:17:24 anayak Exp $
 //
 //
 
@@ -44,6 +44,7 @@
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
+#include "DataFormats/PatCandidates/interface/Particle.h"
 
 #include "CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
@@ -86,6 +87,8 @@ public:
   MyMuon MyMuonConverter(const pat::Muon&, TString&);
   std::vector<MyTau> getTaus(const edm::Event&, const edm::EventSetup&);
   MyTau MyTauConverter(const pat::Tau&, TString&);
+  std::vector<MyKineFitParticle> getKineFitParticles (const edm::Event&, const edm::EventSetup&);
+  MyKineFitParticle MyKineFitPartConverter(const pat::Particle&, TString&);
   
   MyTrack myTrackConverter(const reco::TransientTrack&);
   MyTrack myTrackConverter(const reco::Track&);
@@ -122,7 +125,7 @@ private:
   edm::ParameterSet configParamsTaus_;
   edm::ParameterSet configParamshlt_;
   edm::ParameterSet configParamsMC_;
-
+  edm::ParameterSet configParamsKFPs_;
   //PVx
   edm::Handle<reco::BeamSpot> beamSpot_;
   const reco::Vertex *bestPrimVertex_;
@@ -150,6 +153,7 @@ private:
   bool isData_;
   int mcEvtType_;
   int inputDataSampleCode_;
+  bool runKineFitter_; 
 
   //pu re-weighting
   edm::LumiReWeighting LumiWeights_, LumiWeightsDefault_;

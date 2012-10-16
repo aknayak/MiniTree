@@ -15,7 +15,9 @@ MyEventSelection::MyEventSelection(const edm::ParameterSet& iConfig)
   configParamsTaus_ = iConfig.getParameter<edm::ParameterSet>("Taus");
   configParamshlt_ = iConfig.getParameter<edm::ParameterSet>("Trigger");
   configParamsMC_ = iConfig.getParameter<edm::ParameterSet>("MCTruth");
-
+  configParamsKFPs_ = iConfig.getParameter<edm::ParameterSet>("KineFit");
+  runKineFitter_ = configParamsKFPs_.getParameter<bool>("runKineFitter");
+  
   std::string code = configParamsMC_.getParameter<std::string>("sampleCode");
   if(code!=std::string("DATA")) { isData_=false; }
   else{ isData_=true; inputDataSampleCode_ = MyEvent::DATA; }
@@ -117,6 +119,8 @@ void MyEventSelection::Set(const edm::Event& e, const edm::EventSetup& es)
     event_.mcMET = mcMET;
     event_.sampleInfo = getSampleInfo(e, es);
   }
+  //store kinefit information
+  if(runKineFitter_)event_.KineFitParticles = getKineFitParticles(e, es);
 
   //make event selection
   bool passTrig = false;
@@ -160,7 +164,7 @@ void MyEventSelection::Set(const edm::Event& e, const edm::EventSetup& es)
   }
   myhistos_["SelMuMultiplicity"]->Fill(nIsoMuon);
 
-  int nIsoLepton = nIsoMuon + nIsoElectron;
+  int nIsoLepton = nIsoMuon; // + nIsoElectron;
 
   std::vector<MyJet> jets = event_.Jets;
   int nJets = 0, nHighPtJets = 0;

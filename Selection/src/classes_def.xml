@@ -13,6 +13,7 @@
 <class name="MyTau"/>
 <class name="MyMCParticle"/>
 <class name="SampleInfo"/>
+<class name="MyKineFitParticle"/>
 
 <class name="std::vector<MyVertex>"/>
 <class name="std::vector<MyTrack>"/>
@@ -22,6 +23,7 @@
 <class name="std::vector<MyMuon>"/>
 <class name="std::vector<MyTau>"/>
 <class name="std::vector<MyMCParticle>"/>
+<class name="std::vector<MyKineFitParticle>"/>
 <class name="std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >"/>
 
 

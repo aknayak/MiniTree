@@ -108,6 +108,11 @@ BaseMCTruthSet = cms.PSet( isData = cms.bool(False),
                            sampleCode = cms.string("SEECODES"),
                            jpMatchSources = cms.VInputTag("selectedPatJetsByRef", "selectedPatJetsAK5JPTByRef", "selectedPatJetsAK5PFByRef", "selectedPatJetsPFlowByRef")
                            )
-
-
-
+#values for kine fit object collection ------------------------------------------------
+BaseKFPSet = cms.PSet(sources = cms.VInputTag("kinFitTtSemiLepEvent:Leptons","kinFitTtSemiLepEvent:Neutrinos","kinFitTtSemiLepEvent:PartonsHadB","kinFitTtSemiLepEvent:PartonsHadP","kinFitTtSemiLepEvent:PartonsHadQ","kinFitTtSemiLepEvent:PartonsLepB"),
+                      njetsUsed = cms.InputTag("kinFitTtSemiLepEvent:NumberOfConsideredJets"),
+                      chi2OfFit = cms.InputTag("kinFitTtSemiLepEvent:Chi2"),
+                      probOfFit = cms.InputTag("kinFitTtSemiLepEvent:Prob"),
+                      statusOfFit = cms.InputTag("kinFitTtSemiLepEvent:Status"),
+                      runKineFitter = cms.bool(True)
+                      )
