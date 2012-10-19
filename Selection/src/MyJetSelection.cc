@@ -178,6 +178,11 @@ MyJet MyEventSelection::MyJetConverter(const pat::Jet& iJet, TString& dirtag, co
   discr["trackCountingHighEffBJetTags"] = iJet.bDiscriminator("trackCountingHighEffBJetTags");
   discr["trackCountingHighPurBJetTags"] = iJet.bDiscriminator("trackCountingHighPurBJetTags");
   discr["jetProbabilityBJetTags"] = iJet.bDiscriminator("jetProbabilityBJetTags");   
+  discr["jetBProbabilityBJetTags"] = iJet.bDiscriminator("jetBProbabilityBJetTags");
+  discr["combinedSecondaryVertexBJetTags"] = iJet.bDiscriminator("combinedSecondaryVertexBJetTags");
+  discr["simpleSecondaryVertexHighEffBJetTags"] = iJet.bDiscriminator("simpleSecondaryVertexHighEffBJetTags");
+  discr["simpleSecondaryVertexHighPurBJetTags"] = iJet.bDiscriminator("simpleSecondaryVertexHighPurBJetTags");
+
   newJet.bDiscriminator = discr;
   
   //jet id
