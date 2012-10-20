@@ -44,4 +44,5 @@ def addJetMETExtra(process, isData=False, applyResJEC=True, isAOD=False) :
     print "*** Adding PF MET ***"
     addPfMET(process, 'PF')
             
-            
+    print "*** Adding PileupJetID ***"
+    process.load("CMGTools.External.pujetidsequence_cff")

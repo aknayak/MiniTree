@@ -50,7 +50,13 @@ class MyJet
   //int  isLOOSE;              // JetId criteria (LOOSE PURE09 for CaloJet, LOOSE FIRSTDATA for PfJet)  
   //int  isTIGHT;              // JetId criteria (TIGHT PURE09 for CaloJet, TIGHT FIRSTDATA for PfJet)  
   bool jetIDLoose;             //Loose jetId
-  
+
+  //Pileup JetID
+  int puIDMVALoose;
+  int puIDMVAMedium;
+  int puIDMVATight;
+  float puIDMVADiscr;
+
   // Tracks associated to the jet
   int    nTracks;
   double lead_track_pt;

@@ -65,9 +65,9 @@ process.p  = cms.Path(process.allEventsFilter*process.basePreSel*process.myMiniT
 #process.p  = cms.Path( process.basePreSel*process.myMiniTreeProducer)
 
 if( addPF2PAT ):
-    process.pat_default = cms.Path( process.patSequence * process.patDefaultSequence )
+    process.pat_default = cms.Path( process.patSequence * process.patDefaultSequence * process.puJetIdSqeuence)
 else :
-    process.pat_default = cms.Path( process.patDefaultSequence )
+    process.pat_default = cms.Path( process.patDefaultSequence * process.puJetIdSqeuence)
 
 process.schedule = cms.Schedule(process.tau_extra, process.pat_default, process.p)
 

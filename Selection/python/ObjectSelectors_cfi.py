@@ -85,7 +85,9 @@ BaseJetsSet = cms.PSet(sources = cms.VInputTag("selectedPatJets","selectedPatJet
                        useRawJets = cms.bool(False),
                        minPt = cms.double(17),
                        maxEta = cms.double(2.5),
-                       minDeltaRtoLepton = cms.double(0.4)
+                       minDeltaRtoLepton = cms.double(0.4),
+                       puMVADiscriminant = cms.InputTag("puJetMva:fullDiscriminant"),
+                       puMVAID = cms.InputTag("puJetMva:fullId")
                        )
 
 #my base values for tau selection -----------------------------------------------

@@ -2,6 +2,7 @@
 #include "TrackingTools/IPTools/interface/IPTools.h"
 #include "PhysicsTools/PatUtils/interface/TriggerHelper.h"
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
+#include "CMGTools/External/interface/PileupJetIdentifier.h"
 
 std::vector<MyJet> MyEventSelection::getJets(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
@@ -30,6 +31,15 @@ std::vector<MyJet> MyEventSelection::getJets(const edm::Event& iEvent, const edm
     iEvent.getByLabel( configParamsJets_.getParameter<edm::InputTag>("triggerEvent"), triggerEvent );
     //const pat::TriggerObjectRefVector triggerJets( triggerEvent->objects( trigger::TriggerJet ) );
     
+    edm::InputTag puMVADiscriminant = configParamsJets_.getParameter<edm::InputTag>("puMVADiscriminant");
+    edm::InputTag puMVAID = configParamsJets_.getParameter<edm::InputTag>("puMVAID");
+
+    //PUJetID MVA
+    Handle<ValueMap<float> > puJetIdMVA;
+    iEvent.getByLabel(puMVADiscriminant, puJetIdMVA);
+
+    Handle<ValueMap<int> > puJetIdFlag;
+    iEvent.getByLabel(puMVAID, puJetIdFlag);
 
     //collect Jets
     for(std::vector<edm::InputTag>::iterator sit = sources.begin();
@@ -51,6 +61,9 @@ std::vector<MyJet> MyEventSelection::getJets(const edm::Event& iEvent, const edm
 	  if(!ijets.isValid()) continue;
 	  if(ijets->size() == 0)continue;
 	  
+	  edm::Handle<edm::View<pat::Jet> > jetsHandleForMVA;
+	  iEvent.getByLabel(*sit,jetsHandleForMVA);
+
 	  //add to extract JES uncertainty from CondDB
           // handle the jet corrector parameters collection
           edm::ESHandle<JetCorrectorParametersCollection> JetCorParColl;
@@ -101,6 +114,22 @@ std::vector<MyJet> MyEventSelection::getJets(const edm::Event& iEvent, const edm
               pat::helper::TriggerMatchHelper tmhelper;
               const pat::TriggerObjectRef objRef(tmhelper.triggerMatchObject( ijets, iJet, labelMatcher, iEvent, *triggerEvent ));
               if(objRef.isAvailable()){newJet.triggerJet_pt = objRef->pt();}
+	      
+	      //store PU JetID only for PAT PF Jets
+	      if(rawtag.Contains("PFlow") || rawtag.Contains("JPT") || 
+		 rawtag.Contains("Calo")){
+		newJet.puIDMVALoose = 0;   
+		newJet.puIDMVAMedium = 0;   
+		newJet.puIDMVATight = 0;   
+		newJet.puIDMVADiscr = 0; 
+	      }
+	      else{
+		int    idflag = (*puJetIdFlag)[jetsHandleForMVA->refAt(iJet)];
+		newJet.puIDMVALoose = PileupJetIdentifier::passJetId( idflag, PileupJetIdentifier::kLoose);    
+		newJet.puIDMVAMedium = PileupJetIdentifier::passJetId( idflag, PileupJetIdentifier::kMedium);    
+                newJet.puIDMVATight = PileupJetIdentifier::passJetId( idflag, PileupJetIdentifier::kTight );
+                newJet.puIDMVADiscr = (*puJetIdMVA)[jetsHandleForMVA->refAt(iJet)];
+	      }
 	      
 	      //make selections
 	      bool passKin = true, passId = true, passIso = true;

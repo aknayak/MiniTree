@@ -30,6 +30,10 @@ MyJet::MyJet():
   //isLOOSE(-1),
   //isTIGHT(-1),
   jetIDLoose(false),
+  puIDMVALoose(0), 
+  puIDMVAMedium(0), 
+  puIDMVATight(0), 
+  puIDMVADiscr(0),
   etaetaMoment(0.),
   phiphiMoment(0.),
   quality(0),
@@ -83,6 +87,10 @@ void MyJet::Reset()
   //isLOOSE = -1;
   //isTIGHT = -1;
   jetIDLoose = false;
+  puIDMVALoose = 0;  
+  puIDMVAMedium = 0;  
+  puIDMVATight = 0;  
+  puIDMVADiscr = 0;
   etaetaMoment = 0.;
   phiphiMoment = 0.;
 
