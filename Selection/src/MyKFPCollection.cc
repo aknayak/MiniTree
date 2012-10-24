@@ -44,7 +44,7 @@ std::vector<MyKineFitParticle> MyEventSelection::getKineFitParticles(const edm::
 	}catch(std::exception &e){
 	  continue;
 	}
-	cout<<" size "<<tag<<" "<<ikfps->size()<<endl;
+	//cout<<" size "<<tag<<" "<<ikfps->size()<<endl;
 	if(!ikfps.isValid()) continue;
 	if(ikfps->size() == 0)continue;
 	for(size_t iKfp = 0; iKfp < ikfps->size(); iKfp++)

@@ -33,8 +33,8 @@ process.patElectrons.electronIDSources.simpleEleId60cIso =cms.InputTag("simpleEl
 
 #-- Meta data to be logged in DBS ---------------------------------------------
 process.configurationMetadata = cms.untracked.PSet(
-    version = cms.untracked.string('$Revision: 1.2 $'),
-    name = cms.untracked.string('$Source: /cvs_server/repositories/CMSSW/UserCode/anayak/MiniTree/Selection/python/LocalRunSkeleton_cff.py,v $'),
+    version = cms.untracked.string('$Revision: 1.3 $'),
+    name = cms.untracked.string('$Source: /local/reps/CMSSW/UserCode/anayak/MiniTree/Selection/python/LocalRunSkeleton_cff.py,v $'),
     annotation = cms.untracked.string('top dileptons analysis')
     )
 
@@ -61,6 +61,9 @@ from MiniTree.Selection.pfToPatSequences_cff import *
 
 #generator level utils
 from MiniTree.Selection.GeneratorLevelUtilities_cff import *
+
+#TTBar Kinematic Fitter for muon+Jets
+from MiniTree.Selection.ttSemiLepKinFitMuon_cff import *
 
 #filter to count all events processed
 process.load("MiniTree.Selection.alleventsfilter_cfi")

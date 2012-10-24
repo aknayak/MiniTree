@@ -42,6 +42,12 @@ def addJetMETExtra(process, isData=False, applyResJEC=True, isAOD=False) :
     if( isAOD ) : process.patJets.addTagInfos = cms.bool(False)
     
     print "*** Adding PF MET ***"
+    process.load("JetMETCorrections.Type1MET.pfMETCorrectionType0_cfi")
+    process.pfType1CorrectedMet.applyType0Corrections = cms.bool(False)
+    process.pfType1CorrectedMet.srcType1Corrections = cms.VInputTag(
+        cms.InputTag('pfMETcorrType0'),
+        cms.InputTag('pfJetMETcorr', 'type1')
+        )
     addPfMET(process, 'PF')
             
     print "*** Adding PileupJetID ***"
