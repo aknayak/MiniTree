@@ -20,7 +20,7 @@ def addSemiLepKinFitMuon(process, isData=False) :
                                                     )
     #clean jets from muons
     process.cleanPatJets.checkOverlaps.muons.requireNoOverlaps  = cms.bool(True)
-    process.cleanPatJets.preselection = cms.string("pt>20 && abs(eta)<2.4")
+    process.cleanPatJets.preselection = cms.string("pt>20 && abs(eta)<2.5")
     
     #change constraints on kineFit
     process.kinFitTtSemiLepEvent.constraints = cms.vuint32(3, 4)
