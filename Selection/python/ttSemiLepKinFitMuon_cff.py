@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 from TopQuarkAnalysis.TopObjectResolutions.stringResolutions_etEtaPhi_Fall11_cff import *
-        
+
 def addSemiLepKinFitMuon(process, isData=False) :
 
     ## std sequence to produce the kinematic fit for semi-leptonic events
@@ -33,6 +33,7 @@ def addSemiLepKinFitMuon(process, isData=False) :
     process.kinFitTtSemiLepEvent.bResolutions = bjetResolutionPF.functions
     process.kinFitTtSemiLepEvent.lepResolutions = muonResolution.functions
     process.kinFitTtSemiLepEvent.metResolutions = metResolutionPF.functions
+    process.kinFitTtSemiLepEvent.metResolutions[0].eta = "9999"
     if not isData :
         process.kinFitTtSemiLepEvent.jetEnergyResolutionScaleFactors = cms.vdouble (
             1.052, 1.057, 1.096, 1.134, 1.288  )
