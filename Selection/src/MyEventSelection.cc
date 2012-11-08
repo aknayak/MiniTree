@@ -250,6 +250,9 @@ void MyEventSelection::BookHistos()
   myhistos_["intimepu"] = dirs_[dirs_.size() - 1].make<TH1D>("intimepu", "intime pileup", 101, -0.5, 100.5);
   myhistos_["outoftimepu"] = dirs_[dirs_.size() - 1].make<TH1D>("outoftimepu", "out of time pileup", 101, -0.5, 100.5);
   myhistos_["totalpu"] = dirs_[dirs_.size() - 1].make<TH1D>("totalpu", "total pileup", 101, -0.5, 100.5);
+  myhistos_["trueintimepu"] = dirs_[dirs_.size() - 1].make<TH1D>("trueintimepu", "intime pileup", 600, 0., 60.); 
+  myhistos_["trueoutoftimepu"] = dirs_[dirs_.size() - 1].make<TH1D>("trueoutoftimepu", "out of time pileup", 600, 0., 60.); 
+  myhistos_["truetotalpu"] = dirs_[dirs_.size() - 1].make<TH1D>("truetotalpu", "total pileup", 600, 0., 60.);
 
   //Jets
   std::vector<edm::InputTag> sources = configParamsJets_.getParameter<std::vector<edm::InputTag> >("sources");

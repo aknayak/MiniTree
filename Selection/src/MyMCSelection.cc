@@ -107,38 +107,52 @@ SampleInfo MyEventSelection::getSampleInfo(const edm::Event& iEvent, const edm::
   
   //store GenPileup info
   double npuVertices_=0, nOOTpuVertices_=0;
+  double nTruePuVertices_=0, nTrueOOTPuVertices_=0;
   edm::Handle<std::vector<PileupSummaryInfo> > puInfoH;
   iEvent.getByType(puInfoH);
       
   if(puInfoH.isValid())
     {
       double nOOTpuVertices(0),npuVertices(0);
+      double nTrueOOTPuVertices(0),nTruePuVertices(0);
       for(std::vector<PileupSummaryInfo>::const_iterator it =
 	    puInfoH->begin(); it != puInfoH->end(); it++)
 	{
 	  if(it->getBunchCrossing() ==0)
 	    {
 	      npuVertices += it->getPU_NumInteractions();
+	      nTruePuVertices += it->getTrueNumInteractions();
 	    }
 	  else
 	    {
 	      nOOTpuVertices += it->getPU_NumInteractions();
+	      nTrueOOTPuVertices += it->getTrueNumInteractions();
 	    }
 	}
       npuVertices_ = npuVertices;
       nOOTpuVertices_ = nOOTpuVertices;
+      nTruePuVertices_ = nTruePuVertices;
+      nTrueOOTPuVertices_ = nTrueOOTPuVertices;
     }
 
   std::vector<double>pu; pu.clear();
   pu.push_back(npuVertices_);
   pu.push_back(nOOTpuVertices_);
 
+  std::vector<double>putrue; putrue.clear(); 
+  putrue.push_back(nTruePuVertices_); 
+  putrue.push_back(nTrueOOTPuVertices_);
+
   mcInfo.pileup = pu;
-  
+  mcInfo.truepileup = putrue;
+
   myhistos_["intimepu"]->Fill(npuVertices_);
   myhistos_["outoftimepu"]->Fill(nOOTpuVertices_);
   myhistos_["totalpu"]->Fill(npuVertices_+nOOTpuVertices_);
-  
+  myhistos_["trueintimepu"]->Fill(nTruePuVertices_); 
+  myhistos_["trueoutoftimepu"]->Fill(nTrueOOTPuVertices_); 
+  myhistos_["truetotalpu"]->Fill(nTruePuVertices_+nTrueOOTPuVertices_);
+
   //pu-reweight
   const edm::EventBase* iEventB = dynamic_cast<const edm::EventBase*>(&iEvent);
   double puweight = LumiWeights_.weight( (*iEventB) );
