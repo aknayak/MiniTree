@@ -29,7 +29,6 @@ std::vector<MyKineFitParticle> MyEventSelection::getKineFitParticles(const edm::
     }catch(std::exception &e){
       std::cout<<" KineFitter product is not available"<<std::endl;
     }
-    cout<<"size of chi2 "<<chi2_->size()<<endl;
     
     for(std::vector<edm::InputTag>::iterator sit = sources.begin();
 	sit != sources.end();
@@ -50,7 +49,6 @@ std::vector<MyKineFitParticle> MyEventSelection::getKineFitParticles(const edm::
 	for(size_t iKfp = 0; iKfp < ikfps->size(); iKfp++)
 	  {
 	    const pat::Particle jKfp = ((*ikfps)[iKfp]);
-	    
 	    MyKineFitParticle newKfp = MyKineFitPartConverter(jKfp, rawtag);
 	    newKfp.partName = tag;
 	    newKfp.chi2OfFit = chi2_->size()>0 ? (*chi2_)[0] : 999.;

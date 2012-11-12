@@ -17,6 +17,7 @@ class MyJet
   void   Reset();
   
   MyLorentzVector p4;         // 4 vector of jet.
+  MyLorentzVector Genp4;      //4 vector of matched genJet
   std::map<std::string, double>JECs;
   double JECUncertainty;
   std::string jetName;

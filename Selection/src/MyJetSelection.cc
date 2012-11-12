@@ -176,7 +176,7 @@ MyJet MyEventSelection::MyJetConverter(const pat::Jet& iJet, TString& dirtag, co
   myhistos_["phi_"+dirtag]->Fill(iJet.phi());
   
   //MC truth
-  const reco::Candidate *genParton = iJet.genParton();
+  const reco::GenParticle *genParton = iJet.genParton();
   newJet.parton_id = (genParton != 0 ? genParton->pdgId() : 0 );
   if(genParton){
     if(genParton->numberOfMothers() > 0){
@@ -187,6 +187,11 @@ MyJet MyEventSelection::MyJetConverter(const pat::Jet& iJet, TString& dirtag, co
   newJet.jetCharge = iJet.jetCharge();
   newJet.etaetaMoment = iJet.etaetaMoment();
   newJet.phiphiMoment = iJet.phiphiMoment();
+  
+  const reco::GenJet *genJet = iJet.genJet();
+  if(genJet){
+    newJet.Genp4.SetCoordinates(genJet->px(), genJet->py(), genJet->pz(), genJet->energy());
+  }
   
   //JECs
   std::map<std::string, double>jetCorrections; jetCorrections.clear();

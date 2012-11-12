@@ -55,6 +55,7 @@ MyJet::~MyJet()
 void MyJet::Reset()
 {
   p4.SetCoordinates(0.0, 0.0, 0.0, 0.0);
+  Genp4.SetCoordinates(0.0, 0.0, 0.0, 0.0);
   vertex.SetCoordinates(-999.0,-999.0,-999.0);
   tau_vertex.SetCoordinates(-999.0,-999.0,-999.0);
 
