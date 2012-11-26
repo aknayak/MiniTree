@@ -12,11 +12,11 @@ procName='LOCALUSER'
 #process.source.fileNames = ["file:/sps/cms/anayak/LocalData/relval-CMSSW523/relvalTTBar-CMSSW523-AODSIM-START52_V5-v1_numEvent1000.root"]
 #process.source.fileNames = ["file:/sps/cms/anayak/LocalData/WToTauNu_TuneZ2star_8TeV_pythia6_tauola-U_S7_START50_V15-v1_numEvent10000.root"]
 #process.source.fileNames = ["/store/cmst3/user/pharris/HTauTauSynchronization/VBF_HToTauTau_M-120_8TeV-powheg-pythia6-tauola_FED5F7FE-0597-E111-BE71-485B39800BB5.root"]
-process.source.fileNames = ["/store/relval/CMSSW_5_3_4_cand1-START53_V10/RelValWjet_Pt_3000_3500/GEN-SIM-RECO/v1/0000/EA116D50-68F5-E111-AFF5-0018F3D0966C.root"]
+process.source.fileNames = ["/store/relval/CMSSW_5_3_4_cand1-START53_V10/RelValProdTTbar/AODSIM/v1/0000/E4B1152C-68F5-E111-A019-002354EF3BDA.root"]
 
 trigMenu = 'HLT'
 isData=False
-isAOD=False
+isAOD=True
 isFastsim = False
 #mutriglist = [ 'HLT_Mu15_v2' ]
 mutriglist = [ 'HLT_IsoMu24_eta2p1_v8' ]
@@ -30,7 +30,7 @@ storeOutPath=False
 # start process configuration -------------------------------------------------
 process.setName_(procName)
 producePDFweights=False
-process.GlobalTag.globaltag = cms.string( 'START52_V5::All' )
+process.GlobalTag.globaltag = cms.string( 'START53_V10::All' )
 
 
 # configure the extra modules -------------------------------------------------
@@ -63,7 +63,7 @@ process.myMiniTreeProducer.Trigger.bits.extend( jettriglist )
 # analysis sequence ------------------------------------------------------------
 process.tau_extra = cms.Path(process.PFTau)
 process.met_extra = cms.Path(process.type0PFMEtCorrection * process.producePFMETCorrections)
-process.kineFit = cms.Path(process.kinFitTtSemiLepEvent)
+process.kineFit = cms.Path(process.kinFitSequence) #cms.Path(process.kinFitTtSemiLepEvent)
 
 process.p  = cms.Path(process.allEventsFilter*process.basePreSel*process.myMiniTreeProducer)
 #process.p  = cms.Path( process.basePreSel*process.myMiniTreeProducer)

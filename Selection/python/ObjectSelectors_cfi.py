@@ -111,10 +111,18 @@ BaseMCTruthSet = cms.PSet( isData = cms.bool(False),
                            jpMatchSources = cms.VInputTag("selectedPatJetsByRef", "selectedPatJetsAK5JPTByRef", "selectedPatJetsAK5PFByRef", "selectedPatJetsPFlowByRef")
                            )
 #values for kine fit object collection ------------------------------------------------
-BaseKFPSet = cms.PSet(sources = cms.VInputTag("kinFitTtSemiLepEvent:Leptons","kinFitTtSemiLepEvent:Neutrinos","kinFitTtSemiLepEvent:PartonsHadB","kinFitTtSemiLepEvent:PartonsHadP","kinFitTtSemiLepEvent:PartonsHadQ","kinFitTtSemiLepEvent:PartonsLepB"),
+BaseKFPSet = cms.PSet(sources = cms.VInputTag("kinFitTtSemiLepEvent:Leptons","kinFitTtSemiLepEvent:Neutrinos","kinFitTtSemiLepEvent:PartonsHadB","kinFitTtSemiLepEvent:PartonsHadP","kinFitTtSemiLepEvent:PartonsHadQ","kinFitTtSemiLepEvent:PartonsLepB","kinFitTtSemiLepEventJESUp:Leptons","kinFitTtSemiLepEventJESUp:Neutrinos","kinFitTtSemiLepEventJESUp:PartonsHadB","kinFitTtSemiLepEventJESUp:PartonsHadP","kinFitTtSemiLepEventJESUp:PartonsHadQ","kinFitTtSemiLepEventJESUp:PartonsLepB","kinFitTtSemiLepEventJESDown:Leptons","kinFitTtSemiLepEventJESDown:Neutrinos","kinFitTtSemiLepEventJESDown:PartonsHadB","kinFitTtSemiLepEventJESDown:PartonsHadP","kinFitTtSemiLepEventJESDown:PartonsHadQ","kinFitTtSemiLepEventJESDown:PartonsLepB"),
                       njetsUsed = cms.InputTag("kinFitTtSemiLepEvent:NumberOfConsideredJets"),
                       chi2OfFit = cms.InputTag("kinFitTtSemiLepEvent:Chi2"),
                       probOfFit = cms.InputTag("kinFitTtSemiLepEvent:Prob"),
                       statusOfFit = cms.InputTag("kinFitTtSemiLepEvent:Status"),
+                      njetsUsedUp = cms.InputTag("kinFitTtSemiLepEventJESUp:NumberOfConsideredJets"),
+                      chi2OfFitUp = cms.InputTag("kinFitTtSemiLepEventJESUp:Chi2"),
+                      probOfFitUp = cms.InputTag("kinFitTtSemiLepEventJESUp:Prob"),
+                      statusOfFitUp = cms.InputTag("kinFitTtSemiLepEventJESUp:Status"),
+                      njetsUsedDown = cms.InputTag("kinFitTtSemiLepEventJESDown:NumberOfConsideredJets"),
+                      chi2OfFitDown = cms.InputTag("kinFitTtSemiLepEventJESDown:Chi2"),
+                      probOfFitDown = cms.InputTag("kinFitTtSemiLepEventJESDown:Prob"),
+                      statusOfFitDown = cms.InputTag("kinFitTtSemiLepEventJESDown:Status"),
                       runKineFitter = cms.bool(True)
                       )

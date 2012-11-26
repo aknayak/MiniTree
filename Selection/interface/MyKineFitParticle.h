@@ -21,6 +21,7 @@ class MyKineFitParticle
   std::string partName;
   int part_id;
   int part_mother_id;
+  std::string labelName;
   double charge;
 
   double chi2OfFit;

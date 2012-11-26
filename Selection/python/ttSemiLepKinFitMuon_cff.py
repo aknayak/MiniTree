@@ -1,6 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 from TopQuarkAnalysis.TopObjectResolutions.stringResolutions_etEtaPhi_Fall11_cff import *
+from TopAnalysis.TopUtils.JetEnergyScale_cfi import *
 
 def addSemiLepKinFitMuon(process, isData=False) :
 
@@ -20,7 +21,7 @@ def addSemiLepKinFitMuon(process, isData=False) :
                                                     )
     #clean jets from muons
     process.cleanPatJets.checkOverlaps.muons.requireNoOverlaps  = cms.bool(True)
-    process.cleanPatJets.preselection = cms.string("pt>20 && abs(eta)<2.5")
+    process.cleanPatJets.preselection = cms.string("pt>15 && abs(eta)<2.5")
     
     #change constraints on kineFit
     process.kinFitTtSemiLepEvent.constraints = cms.vuint32(3, 4)
@@ -39,4 +40,19 @@ def addSemiLepKinFitMuon(process, isData=False) :
             1.052, 1.057, 1.096, 1.134, 1.288  )
         process.kinFitTtSemiLepEvent.jetEnergyResolutionEtaBinning = cms.vdouble(
             0.0, 0.5, 1.1, 1.7, 2.3, -1. ) 
-        
+    # Add JES Up and Down and Rerun the KineFitter
+    process.scaledJetEnergyUp = scaledJetEnergy.clone()
+    process.scaledJetEnergyUp.inputJets = "cleanPatJets"
+    process.scaledJetEnergyUp.inputMETs = "patMETsPF"
+    process.scaledJetEnergyUp.scaleType = "jes:up"
+    process.kinFitTtSemiLepEventJESUp = process.kinFitTtSemiLepEvent.clone()
+    process.kinFitTtSemiLepEventJESUp.jets = cms.InputTag("scaledJetEnergyUp:cleanPatJets") 
+    process.kinFitTtSemiLepEventJESUp.mets = cms.InputTag("scaledJetEnergyUp:patMETsPF")
+    process.scaledJetEnergyDown = scaledJetEnergy.clone()
+    process.scaledJetEnergyDown.inputJets = "cleanPatJets"
+    process.scaledJetEnergyDown.inputMETs = "patMETsPF"
+    process.scaledJetEnergyDown.scaleType = "jes:down"
+    process.kinFitTtSemiLepEventJESDown = process.kinFitTtSemiLepEvent.clone()
+    process.kinFitTtSemiLepEventJESDown.jets = cms.InputTag("scaledJetEnergyDown:cleanPatJets")
+    process.kinFitTtSemiLepEventJESDown.mets = cms.InputTag("scaledJetEnergyDown:patMETsPF")
+    process.kinFitSequence = cms.Sequence(process.kinFitTtSemiLepEvent * process.scaledJetEnergyUp * process.kinFitTtSemiLepEventJESUp * process.scaledJetEnergyDown * process.kinFitTtSemiLepEventJESDown) 

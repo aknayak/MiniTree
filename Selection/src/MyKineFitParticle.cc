@@ -4,6 +4,7 @@ MyKineFitParticle::MyKineFitParticle():
   partName(""),
   part_id(0),
   part_mother_id(0),
+  labelName(""),
   charge(0),
   chi2OfFit(999.),
   statusOfFit(0),
@@ -24,6 +25,7 @@ void MyKineFitParticle::Reset()
   partName = "";
   part_id = 0;
   part_mother_id = 0;
+  labelName = "";
   charge = 0;
   chi2OfFit = 999.;
   statusOfFit = 0;
