@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 from TopQuarkAnalysis.TopObjectResolutions.stringResolutions_etEtaPhi_Fall11_cff import *
-from TopAnalysis.TopUtils.JetEnergyScale_cfi import *
+from MiniTree.Utilities.JetEnergyScale_cfi import *
 
 def addSemiLepKinFitMuon(process, isData=False) :
 
