@@ -8,6 +8,7 @@ SampleInfo::SampleInfo()
   truepileup.clear();
   puWeights.clear();
   truepuWeights.clear();
+  hepNUP = -99;
 }
 
 SampleInfo::~SampleInfo()
