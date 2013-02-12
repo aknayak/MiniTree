@@ -3,6 +3,8 @@
 #include "PhysicsTools/PatUtils/interface/TriggerHelper.h"
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
 #include "CMGTools/External/interface/PileupJetIdentifier.h"
+#include "DataFormats/BTauReco/interface/SecondaryVertexTagInfo.h"
+#include "DataFormats/VertexReco/interface/Vertex.h"
 
 std::vector<MyJet> MyEventSelection::getJets(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
@@ -292,6 +294,22 @@ MyJet MyEventSelection::MyJetConverter(const pat::Jet& iJet, TString& dirtag, co
 
   myhistos_["ntracks_"+dirtag]->Fill(tracks.size());
   myhistos_["nconstituents_"+dirtag]->Fill(iJet.numberOfDaughters());
+
+  //Get secondary vertex information
+  //std::cout<<" is tag info available "<<iJet.hasTagInfo("secondaryVertex")<<std::endl;
+  const reco::SecondaryVertexTagInfo *svTagInfo = iJet.tagInfoSecondaryVertex("secondaryVertex");
+  if(svTagInfo){
+    //std::cout<<" no. of sec. vertices "<<svTagInfo->nVertices()<<std::endl;
+    for(size_t iv = 0; iv < svTagInfo->nVertices(); iv++){
+      const reco::Vertex& sv = svTagInfo->secondaryVertex(iv);
+      if(!(sv.isFake())){
+	newJet.SVP4.push_back(sv.p4());
+	newJet.SVNChi2.push_back(sv.normalizedChi2());
+	newJet.SVflightDistance.push_back(svTagInfo->flightDistance(iv).value());
+	newJet.SVflightDistanceErr.push_back(svTagInfo->flightDistance(iv).error());
+      }
+    }
+  }
 
   //Match to a reco tau and get AgainstLepton Discriminators, needed for tau fake rate studies
   if(iJet.isPFJet()){

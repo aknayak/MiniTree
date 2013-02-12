@@ -17,17 +17,17 @@ def addJetMETExtra(process, isData=False, applyResJEC=True, isAOD=False) :
     #process.FastJetSequence = cms.Sequence(process.kt6PFJets * process.ak5PFJets)
     if(isData) :
         if(applyResJEC) :
-            corrections = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual', 'L5Flavor', 'L7Parton']
+            corrections = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
         else :
-            corrections = ['L1FastJet','L2Relative','L3Absolute','L5Flavor','L7Parton']
+            corrections = ['L1FastJet','L2Relative','L3Absolute']
         runOnData(process, ['All'])
     else :
-        corrections = ['L1FastJet','L2Relative','L3Absolute','L5Flavor','L7Parton']
+        corrections = ['L1FastJet','L2Relative','L3Absolute']
     if( isAOD ) : process.patJets.addTagInfos   = cms.bool(False)
     
-    from PhysicsTools.PatAlgos.recoLayer0.jetCorrFactors_cfi import *
-    process.patJetCorrFactors.levels = ['L1Offset', 'L2Relative', 'L3Absolute']
-    process.patJetCorrFactors.useRho = cms.bool(True)
+    #from PhysicsTools.PatAlgos.recoLayer0.jetCorrFactors_cfi import *
+    #process.patJetCorrFactors.levels = ['L1Offset', 'L2Relative', 'L3Absolute']
+    #process.patJetCorrFactors.useRho = cms.bool(True)
     
     print "*** Switching to PF ak5 jets ***"
     switchJetCollection(process,cms.InputTag('ak5PFJets'),
@@ -39,7 +39,8 @@ def addJetMETExtra(process, isData=False, applyResJEC=True, isAOD=False) :
                      doJetID      = True,
                      jetIdLabel   = "ak5"
                      )
-    if( isAOD ) : process.patJets.addTagInfos = cms.bool(False)
+    #if( isAOD ) : process.patJets.addTagInfos = cms.bool(False)
+    process.patJets.addTagInfos = cms.bool(True)
     
     print "*** Adding PF MET ***"
     process.load("JetMETCorrections.Type1MET.pfMETCorrectionType0_cfi")

@@ -58,6 +58,10 @@ void MyJet::Reset()
   Genp4.SetCoordinates(0.0, 0.0, 0.0, 0.0);
   vertex.SetCoordinates(-999.0,-999.0,-999.0);
   tau_vertex.SetCoordinates(-999.0,-999.0,-999.0);
+  SVP4.clear();
+  SVflightDistance.clear(); 
+  SVflightDistanceErr.clear();
+  SVNChi2.clear(); 
 
   jetName = "";
   parton_id = 0;

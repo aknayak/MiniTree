@@ -18,6 +18,11 @@ class MyJet
   
   MyLorentzVector p4;         // 4 vector of jet.
   MyLorentzVector Genp4;      //4 vector of matched genJet
+  Point3D vertex;
+  std::vector<MyLorentzVector>SVP4; //4 vector of secondary vertices
+  std::vector<double>SVflightDistance;
+  std::vector<double>SVflightDistanceErr;
+  std::vector<float>SVNChi2;
   std::map<std::string, double>JECs;
   double JECUncertainty;
   std::string jetName;
@@ -70,8 +75,6 @@ class MyJet
 
   int quality;
 
-  Point3D vertex;
-  
   //needed for tau-fake rate studies
   Point3D tau_vertex;
   float tau_againstElectronLoose; 
