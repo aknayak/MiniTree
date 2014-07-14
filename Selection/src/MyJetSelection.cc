@@ -35,6 +35,9 @@ std::vector<MyJet> MyEventSelection::getJets(const edm::Event& iEvent, const edm
     
     edm::InputTag puMVADiscriminant = configParamsJets_.getParameter<edm::InputTag>("puMVADiscriminant");
     edm::InputTag puMVAID = configParamsJets_.getParameter<edm::InputTag>("puMVAID");
+    edm::InputTag puMVADiscriminantResCor = configParamsJets_.getParameter<edm::InputTag>("puMVADiscriminantResCor"); 
+    edm::InputTag puMVAIDResCor = configParamsJets_.getParameter<edm::InputTag>("puMVAIDResCor");
+
 
     //PUJetID MVA
     Handle<ValueMap<float> > puJetIdMVA;
@@ -42,6 +45,14 @@ std::vector<MyJet> MyEventSelection::getJets(const edm::Event& iEvent, const edm
 
     Handle<ValueMap<int> > puJetIdFlag;
     iEvent.getByLabel(puMVAID, puJetIdFlag);
+
+    Handle<ValueMap<float> > puJetIdMVARC; 
+    Handle<ValueMap<int> > puJetIdFlagRC;
+    try{ 
+      iEvent.getByLabel(puMVADiscriminantResCor, puJetIdMVARC);
+      iEvent.getByLabel(puMVAIDResCor, puJetIdFlagRC);
+    }catch(std::exception &e){ 
+    }
 
     //collect Jets
     for(std::vector<edm::InputTag>::iterator sit = sources.begin();
@@ -110,13 +121,15 @@ std::vector<MyJet> MyEventSelection::getJets(const edm::Event& iEvent, const edm
               jecUnc->setJetPt(jIt.pt());  
 	      float JECUncertainty = jecUnc->getUncertainty(true);
 	      newJet.JECUncertainty = JECUncertainty;
-	      
+
+	      //remove it for time being. 
 	      std::string labelMatcher = tag+triggerMatch;
               //std::string labelMatcher("JetsAK5PFTrigMatch");
               pat::helper::TriggerMatchHelper tmhelper;
               const pat::TriggerObjectRef objRef(tmhelper.triggerMatchObject( ijets, iJet, labelMatcher, iEvent, *triggerEvent ));
               if(objRef.isAvailable()){newJet.triggerJet_pt = objRef->pt();}
 	      
+
 	      //store PU JetID only for PAT PF Jets
 	      if(rawtag.Contains("PFlow") || rawtag.Contains("JPT") || 
 		 rawtag.Contains("Calo")){
@@ -124,6 +137,13 @@ std::vector<MyJet> MyEventSelection::getJets(const edm::Event& iEvent, const edm
 		newJet.puIDMVAMedium = 0;   
 		newJet.puIDMVATight = 0;   
 		newJet.puIDMVADiscr = 0; 
+	      }
+	      else if(rawtag.Contains("ResCor")){
+		int    idflag = (*puJetIdFlagRC)[jetsHandleForMVA->refAt(iJet)]; 
+                newJet.puIDMVALoose = PileupJetIdentifier::passJetId( idflag, PileupJetIdentifier::kLoose);     
+                newJet.puIDMVAMedium = PileupJetIdentifier::passJetId( idflag, PileupJetIdentifier::kMedium);     
+                newJet.puIDMVATight = PileupJetIdentifier::passJetId( idflag, PileupJetIdentifier::kTight ); 
+                newJet.puIDMVADiscr = (*puJetIdMVARC)[jetsHandleForMVA->refAt(iJet)];
 	      }
 	      else{
 		int    idflag = (*puJetIdFlag)[jetsHandleForMVA->refAt(iJet)];
@@ -319,7 +339,7 @@ MyJet MyEventSelection::MyJetConverter(const pat::Jet& iJet, TString& dirtag, co
       newJet.tau_againstElectronLoose = matchTau->tauID("againstElectronLoose");
       newJet.tau_againstElectronMedium = matchTau->tauID("againstElectronMedium"); 
       newJet.tau_againstElectronTight = matchTau->tauID("againstElectronTight"); 
-      newJet.tau_againstElectronMVA = matchTau->tauID("againstElectronMVA"); 
+      newJet.tau_againstElectronMVA = matchTau->tauID("againstElectronTightMVA3"); 
       newJet.tau_againstMuonLoose = matchTau->tauID("againstMuonLoose"); 
       newJet.tau_againstMuonMedium = matchTau->tauID("againstMuonMedium"); 
       newJet.tau_againstMuonTight = matchTau->tauID("againstMuonTight"); 

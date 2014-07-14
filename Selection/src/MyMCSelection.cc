@@ -1,4 +1,5 @@
 #include "MiniTree/Selection/interface/MyEventSelection.h"
+#include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 
 std::vector<MyMCParticle> MyEventSelection::getMCParticles(const edm::Event& iEvent){
   std::vector<MyMCParticle> mcParticles;
@@ -167,6 +168,51 @@ SampleInfo MyEventSelection::getSampleInfo(const edm::Event& iEvent, const edm::
   //puW.push_back(puweightDefaultOOT);
   mcInfo.puWeights = puW;
 
+  //get parton multiplicity information for W+jets
+  int hepNUP_ = -99;
+  edm::Handle<LHEEventProduct > LHEHandle;
+  const LHEEventProduct* LHE = 0;
+  iEvent.getByLabel("source",LHEHandle);
+  if(LHEHandle.isValid()){
+    LHE = LHEHandle.product();
+    hepNUP_ = (LHE->hepeup()).NUP;
+    //cout << hepNUP_ << endl;
+  }
+  mcInfo.hepNUP = hepNUP_;
+
+  //add weights for top pT re-weighting
+  edm::Handle<reco::GenParticleCollection> genParticles;
+  try{
+    iEvent.getByLabel("genParticles", genParticles);
+  }catch(...) {;}
+
+  if(genParticles.isValid()){
+    //std::cout << "MC particles size " << genParticles->size() << std::endl;
+
+    double pt_top = -1.0; double pt_antitop = -1.0;
+    for(size_t i = 0; i < genParticles->size(); ++ i)
+      {
+        const reco::GenParticle & part = (*genParticles)[i];
+	int id = part.pdgId();
+
+        if(part.status() == 3 &&  part.pdgId() == 6)
+	  pt_top = part.pt();
+	else if(part.status() == 3 &&  part.pdgId() == -6)
+	  pt_antitop = part.pt();
+      }
+
+    if(pt_top >= 0 && pt_antitop >= 0){
+      double topPtWeight_LJ = sqrt(exp(0.159 - 0.00141*pt_top)*exp(0.159 - 0.00141*pt_antitop));
+      double topPtWeight_2L = sqrt(exp(0.148 - 0.00129*pt_top)*exp(0.148 - 0.00129*pt_antitop));
+      double topPtWeight_comb = sqrt(exp(0.156 - 0.00137*pt_top)*exp(0.156 - 0.00137*pt_antitop));
+      std::vector<double>topPtW; topPtW.clear();
+      topPtW.push_back(topPtWeight_LJ);
+      topPtW.push_back(topPtWeight_2L);
+      topPtW.push_back(topPtWeight_comb);
+      mcInfo.topPtWeights = topPtW;
+    }
+  }
+  
   return mcInfo;
 }
 

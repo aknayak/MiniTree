@@ -171,6 +171,7 @@ void MyEventSelection::Set(const edm::Event& e, const edm::EventSetup& es)
   for(size_t ijet = 0; ijet < jets.size(); ijet++){
     std::string algo = jets[ijet].jetName;
     if(algo.find("PFlow") == std::string::npos) continue;
+    if(isData_ && algo.find("ResCor") == std::string::npos) continue;
     bool passKin = false, passId = false;
     int quality = jets[ijet].quality;
     if(quality & 0x1)passKin = true;

@@ -76,7 +76,7 @@ BaseElectronsSet =  cms.PSet(sources = cms.VInputTag("selectedPatElectrons", "se
                              )
 
 #my base values for jet selection -----------------------------------------------
-BaseJetsSet = cms.PSet(sources = cms.VInputTag("selectedPatJets","selectedPatJetsPFlow"),
+BaseJetsSet = cms.PSet(sources = cms.VInputTag("selectedPatJets","selectedPatJetsPFlow","selectedPatJetsResCor"),
                        CaloJetId = cms.PSet( version = cms.string("PURE09"), quality = cms.string("LOOSE") ),
                        PFJetId = cms.PSet( version = cms.string("FIRSTDATA"), quality = cms.string("LOOSE") ),
                        dedxSource = cms.InputTag("dedxHarmonic2"),
@@ -87,7 +87,9 @@ BaseJetsSet = cms.PSet(sources = cms.VInputTag("selectedPatJets","selectedPatJet
                        maxEta = cms.double(2.5),
                        minDeltaRtoLepton = cms.double(0.4),
                        puMVADiscriminant = cms.InputTag("puJetMva:fullDiscriminant"),
-                       puMVAID = cms.InputTag("puJetMva:fullId")
+                       puMVAID = cms.InputTag("puJetMva:fullId"),
+                       puMVADiscriminantResCor = cms.InputTag("puJetMvaResCor:fullDiscriminant"),
+                       puMVAIDResCor = cms.InputTag("puJetMvaResCor:fullId")
                        )
 
 #my base values for tau selection -----------------------------------------------
@@ -100,7 +102,7 @@ BaseTausSet = cms.PSet(sources = cms.VInputTag("selectedPatTaus", "selectedPatTa
 
 
 #my base values for met selection ------------------------------------------------
-BaseMetsSet = cms.PSet(sources = cms.VInputTag("patMETsPF","patMETsPFlow"),
+BaseMetsSet = cms.PSet(sources = cms.VInputTag("patMETs","patMETsPFlow","patPfMetT0pcT1Txy"),
                        minMET = cms.double(10)
                        )
 
@@ -111,7 +113,7 @@ BaseMCTruthSet = cms.PSet( isData = cms.bool(False),
                            jpMatchSources = cms.VInputTag("selectedPatJetsByRef", "selectedPatJetsAK5JPTByRef", "selectedPatJetsAK5PFByRef", "selectedPatJetsPFlowByRef")
                            )
 #values for kine fit object collection ------------------------------------------------
-BaseKFPSet = cms.PSet(sources = cms.VInputTag("kinFitTtSemiLepEvent:Leptons","kinFitTtSemiLepEvent:Neutrinos","kinFitTtSemiLepEvent:PartonsHadB","kinFitTtSemiLepEvent:PartonsHadP","kinFitTtSemiLepEvent:PartonsHadQ","kinFitTtSemiLepEvent:PartonsLepB","kinFitTtSemiLepEventJESUp:Leptons","kinFitTtSemiLepEventJESUp:Neutrinos","kinFitTtSemiLepEventJESUp:PartonsHadB","kinFitTtSemiLepEventJESUp:PartonsHadP","kinFitTtSemiLepEventJESUp:PartonsHadQ","kinFitTtSemiLepEventJESUp:PartonsLepB","kinFitTtSemiLepEventJESDown:Leptons","kinFitTtSemiLepEventJESDown:Neutrinos","kinFitTtSemiLepEventJESDown:PartonsHadB","kinFitTtSemiLepEventJESDown:PartonsHadP","kinFitTtSemiLepEventJESDown:PartonsHadQ","kinFitTtSemiLepEventJESDown:PartonsLepB"),
+BaseKFPSet = cms.PSet(sources = cms.VInputTag("kinFitTtSemiLepEvent:Leptons","kinFitTtSemiLepEvent:Neutrinos","kinFitTtSemiLepEvent:PartonsHadB","kinFitTtSemiLepEvent:PartonsHadP","kinFitTtSemiLepEvent:PartonsHadQ","kinFitTtSemiLepEvent:PartonsLepB","kinFitTtSemiLepEventJESUp:Leptons","kinFitTtSemiLepEventJESUp:Neutrinos","kinFitTtSemiLepEventJESUp:PartonsHadB","kinFitTtSemiLepEventJESUp:PartonsHadP","kinFitTtSemiLepEventJESUp:PartonsHadQ","kinFitTtSemiLepEventJESUp:PartonsLepB","kinFitTtSemiLepEventJESDown:Leptons","kinFitTtSemiLepEventJESDown:Neutrinos","kinFitTtSemiLepEventJESDown:PartonsHadB","kinFitTtSemiLepEventJESDown:PartonsHadP","kinFitTtSemiLepEventJESDown:PartonsHadQ","kinFitTtSemiLepEventJESDown:PartonsLepB","kinFitTtSemiLepEventJERUp:Leptons","kinFitTtSemiLepEventJERUp:Neutrinos","kinFitTtSemiLepEventJERUp:PartonsHadB","kinFitTtSemiLepEventJERUp:PartonsHadP","kinFitTtSemiLepEventJERUp:PartonsHadQ","kinFitTtSemiLepEventJERUp:PartonsLepB","kinFitTtSemiLepEventJERDown:Leptons","kinFitTtSemiLepEventJERDown:Neutrinos","kinFitTtSemiLepEventJERDown:PartonsHadB","kinFitTtSemiLepEventJERDown:PartonsHadP","kinFitTtSemiLepEventJERDown:PartonsHadQ","kinFitTtSemiLepEventJERDown:PartonsLepB"),
                       njetsUsed = cms.InputTag("kinFitTtSemiLepEvent:NumberOfConsideredJets"),
                       chi2OfFit = cms.InputTag("kinFitTtSemiLepEvent:Chi2"),
                       probOfFit = cms.InputTag("kinFitTtSemiLepEvent:Prob"),
@@ -124,5 +126,13 @@ BaseKFPSet = cms.PSet(sources = cms.VInputTag("kinFitTtSemiLepEvent:Leptons","ki
                       chi2OfFitDown = cms.InputTag("kinFitTtSemiLepEventJESDown:Chi2"),
                       probOfFitDown = cms.InputTag("kinFitTtSemiLepEventJESDown:Prob"),
                       statusOfFitDown = cms.InputTag("kinFitTtSemiLepEventJESDown:Status"),
+                      njetsUsedJERUp = cms.InputTag("kinFitTtSemiLepEventJERUp:NumberOfConsideredJets"),
+                      chi2OfFitJERUp = cms.InputTag("kinFitTtSemiLepEventJERUp:Chi2"),
+                      probOfFitJERUp = cms.InputTag("kinFitTtSemiLepEventJERUp:Prob"),
+                      statusOfFitJERUp = cms.InputTag("kinFitTtSemiLepEventJERUp:Status"),
+                      njetsUsedJERDown = cms.InputTag("kinFitTtSemiLepEventJERDown:NumberOfConsideredJets"),
+                      chi2OfFitJERDown = cms.InputTag("kinFitTtSemiLepEventJERDown:Chi2"),
+                      probOfFitJERDown = cms.InputTag("kinFitTtSemiLepEventJERDown:Prob"),
+                      statusOfFitJERDown = cms.InputTag("kinFitTtSemiLepEventJERDown:Status"),
                       runKineFitter = cms.bool(True)
                       )

@@ -18,6 +18,7 @@ class SampleInfo
   std::vector<double>puWeights;
   std::vector<double>truepuWeights;
   int hepNUP;
+  std::vector<double>topPtWeights;
   
  private :
 

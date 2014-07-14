@@ -79,7 +79,7 @@ MyTau MyEventSelection::MyTauConverter(const pat::Tau& iTau, TString& dirtag)
   newTau.againstElectronLoose = iTau.tauID("againstElectronLoose");
   newTau.againstElectronMedium = iTau.tauID("againstElectronMedium");
   newTau.againstElectronTight = iTau.tauID("againstElectronTight");
-  newTau.againstElectronMVA = iTau.tauID("againstElectronMVA");
+  newTau.againstElectronMVA = iTau.tauID("againstElectronTightMVA3");
   newTau.againstMuonLoose = iTau.tauID("againstMuonLoose");
   newTau.againstMuonMedium = iTau.tauID("againstMuonMedium");
   newTau.againstMuonTight = iTau.tauID("againstMuonTight");
