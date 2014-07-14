@@ -34,6 +34,7 @@ JetEnergyScale::JetEnergyScale(const edm::ParameterSet& cfg):
   allowedTypes_.push_back(std::string("top:down"));
   allowedTypes_.push_back(std::string("flavor:up"));
   allowedTypes_.push_back(std::string("flavor:down"));
+  allowedTypes_.push_back(std::string("jer")); //It does nothing except jer smearing
 
   // use label of input to create label for output
   outputJets_ = inputJets_.label();
@@ -77,6 +78,10 @@ JetEnergyScale::produce(edm::Event& event, const edm::EventSetup& setup)
   double dPx = 0., dPy = 0., dSumEt = 0.;
   for(std::vector<pat::Jet>::const_iterator jet=jets->begin(); jet!=jets->end(); ++jet){
     pat::Jet scaledJet = *jet;
+
+    // JER scaled for all possible methods
+    double jerScaleFactor = resolutionFactor(scaledJet);
+    scaleJetEnergy( scaledJet, jerScaleFactor );
     
     if(scaleType_=="abs"){
       //scaledJet.scaleEnergy( scaleFactor_ );
@@ -85,14 +90,10 @@ JetEnergyScale::produce(edm::Event& event, const edm::EventSetup& setup)
         //scaledJet.scaleEnergy( scaleFactorB_ );
 	scaleJetEnergy( scaledJet, scaleFactorB_ );
       }
-      //scaledJet.scaleEnergy( resolutionFactor(scaledJet) );
-      scaleJetEnergy( scaledJet, resolutionFactor(scaledJet) );
     }
     if(scaleType_=="rel"){
       //scaledJet.scaleEnergy( 1+(fabs(scaledJet.eta())*(scaleFactor_-1. )));    
       scaleJetEnergy( scaledJet, 1+(fabs(scaledJet.eta())*(scaleFactor_-1. )) );
-      //scaledJet.scaleEnergy( resolutionFactor(scaledJet) );
-      scaleJetEnergy( scaledJet, resolutionFactor(scaledJet) );
     }    
     if(scaleType_.substr(0, scaleType_.find(':'))=="jes" || 
        scaleType_.substr(0, scaleType_.find(':'))=="top" ){
@@ -136,8 +137,6 @@ JetEnergyScale::produce(edm::Event& event, const edm::EventSetup& setup)
 	scaleJetEnergy( scaledJet, 1-std::sqrt(jetMet*jetMet + topShift2) );
       }
 
-      //scaledJet.scaleEnergy( resolutionFactor(scaledJet) );
-      scaleJetEnergy( scaledJet, resolutionFactor(scaledJet) );
       delete deltaJEC;
     }
     // Use AK5PF flavor uncertainty as estimator on the difference between uds- and b-jets
@@ -160,7 +159,6 @@ JetEnergyScale::produce(edm::Event& event, const edm::EventSetup& setup)
           scaleJetEnergy( scaledJet, 1-jetMet );
         }
       }
-      scaleJetEnergy( scaledJet, resolutionFactor(scaledJet) );
       delete deltaJEC;
       delete param;
     }
