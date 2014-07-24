@@ -133,7 +133,7 @@ void MyEventSelection::Set(const edm::Event& e, const edm::EventSetup& es)
   std::vector<MyElectron> electrons = event_.Electrons;
   for(size_t iele = 0; iele < electrons.size(); iele++){
     std::string algo = electrons[iele].name;
-    if(algo.find("PFlow") == std::string::npos) continue;
+    //if(algo.find("PFlow") == std::string::npos) continue;
     bool passKin = false, passId = false, passIso = false;
     int quality = electrons[iele].quality;
     if(quality & 0x1)passKin = true;
@@ -164,13 +164,13 @@ void MyEventSelection::Set(const edm::Event& e, const edm::EventSetup& es)
   }
   myhistos_["SelMuMultiplicity"]->Fill(nIsoMuon);
 
-  int nIsoLepton = nIsoMuon; // + nIsoElectron;
+  int nIsoLepton = nIsoMuon + nIsoElectron;
 
   std::vector<MyJet> jets = event_.Jets;
   int nJets = 0, nHighPtJets = 0;
   for(size_t ijet = 0; ijet < jets.size(); ijet++){
     std::string algo = jets[ijet].jetName;
-    if(algo.find("PFlow") == std::string::npos) continue;
+    //if(algo.find("PFlow") == std::string::npos) continue;
     if(isData_ && algo.find("ResCor") == std::string::npos) continue;
     bool passKin = false, passId = false;
     int quality = jets[ijet].quality;
@@ -303,6 +303,8 @@ void MyEventSelection::BookHistos()
       myhistos_["vbtf_id_"+rawtag] = dirs_[dirs_.size() - 1].make<TH1D>("vbtf_id_"+rawtag, "Electron VBTF id", 25, 0., 25.);
       myhistos_["reliso_"+rawtag] = dirs_[dirs_.size() - 1].make<TH1D>("reliso_"+rawtag, "Electron reliso", 100, 0, 5.);
       myhistos_["lowreliso_"+rawtag] = dirs_[dirs_.size() - 1].make<TH1D>("lowreliso_"+rawtag, "Electron lowreliso", 100, 0, 1.);
+      myhistos_["relpfiso_"+rawtag] = dirs_[dirs_.size() - 1].make<TH1D>("relpfiso_"+rawtag, "Electron pf reliso", 100, 0, 5.);
+      myhistos_["lowrelpfiso_"+rawtag] = dirs_[dirs_.size() - 1].make<TH1D>("lowrelpfiso_"+rawtag, "Electron pf lowreliso", 100, 0, 1.);
     }
   //Muons
   sources = configParamsMuons_.getParameter<std::vector<edm::InputTag> >("sources");

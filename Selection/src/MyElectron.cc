@@ -30,17 +30,24 @@ MyElectron::MyElectron():
   isEE(-1),
   isEB(-1),
   nHits(-999.),
+  nMissingHits(999.),
   nLostHits(-999.),
   nLostPixelHits(-999.),
   normChi2(-999.),
-  TrkIso(-999.),
-  ECalIso(-999.),
-  HCalIso(-999.),
-  RelIso(-999.),
-  TrkIso04(-999.),
-  ECalIso04(-999.),
-  HCalIso04(-999.),
-  RelIso04(-999.),
+  TrkIso(999.),
+  ECalIso(999.),
+  HCalIso(999.),
+  RelIso(999.),
+  TrkIso04(999.),
+  ECalIso04(999.),
+  HCalIso04(999.),
+  RelIso04(999.),
+  ChHadIso(999.),  
+  PhotonIso(999.),   
+  NeuHadIso(999.),   
+  PileupIso(999.), 
+  pfRelIso(999.),
+  antiConv(-99),
   IP3D(-999),
   IP3DError(-999.),
   D0(-999.),
@@ -90,17 +97,24 @@ void MyElectron::Reset()
   isEE = -1;
   isEB = -1;
   nHits = -999.;
+  nMissingHits = 999.;
   nLostHits = -999.;
   nLostPixelHits = -999.;
   normChi2 = -999.;
-  TrkIso = -999.;
-  ECalIso = -999.;
-  HCalIso = -999.;
-  RelIso = -999.;
-  TrkIso04 = -999.;
-  ECalIso04 = -999.;
-  HCalIso04 = -999.;
-  RelIso04 = -999.;
+  TrkIso = 999.;
+  ECalIso = 999.;
+  HCalIso = 999.;
+  RelIso = 999.;
+  TrkIso04 = 999.;
+  ECalIso04 = 999.;
+  HCalIso04 = 999.;
+  RelIso04 = 999.;
+  ChHadIso = 999.;   
+  PhotonIso = 999.;    
+  NeuHadIso = 999.;    
+  PileupIso = 999.;  
+  pfRelIso = 999.; 
+  antiConv = -99;
   IP3D = -999;
   IP3DError = -999.;
   D0 = -999.;

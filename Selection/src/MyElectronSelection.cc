@@ -2,6 +2,8 @@
 #include "TrackingTools/IPTools/interface/IPTools.h"
 #include "PhysicsTools/PatUtils/interface/TriggerHelper.h"
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
+#include "RecoEgamma/EgammaTools/interface/ConversionTools.h"
+#include "EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h"
 
 std::vector<MyElectron> MyEventSelection::getElectrons(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
@@ -26,7 +28,8 @@ std::vector<MyElectron> MyEventSelection::getElectrons(const edm::Event& iEvent,
     //double minS4S1 = configParamsElectrons_.getParameter<double>("minS4S1");
     //bool ecalOnly = configParamsElectrons_.getParameter<bool>("ecalOnly");
     std::string triggerMatch = configParamsElectrons_.getParameter<std::string>("triggerMatch");
-    
+    edm::InputTag rhoProducer_ = configParamsElectrons_.getParameter<edm::InputTag>("rho");
+
     EcalClusterLazyTools lazytools( iEvent, iSetup,
 				    configParamsElectrons_.getParameter<edm::InputTag>("ebRecHits"),
 				    configParamsElectrons_.getParameter<edm::InputTag>("eeRecHits") );
@@ -38,6 +41,15 @@ std::vector<MyElectron> MyEventSelection::getElectrons(const edm::Event& iEvent,
     iEvent.getByLabel( configParamsJets_.getParameter<edm::InputTag>("triggerEvent"), triggerEvent );
     //const pat::TriggerObjectRefVector triggerElectrons( triggerEvent->objects( trigger::TriggerElectron ) );
     
+    //Conversion rejection
+    edm::Handle<reco::ConversionCollection> hConversions;
+    iEvent.getByLabel("allConversions", hConversions);
+
+    //pileup
+    edm::Handle<double> hRho;
+    iEvent.getByLabel(rhoProducer_, hRho);
+    double rho_ = *hRho;
+
     //collect Electrons
     for(std::vector<edm::InputTag>::iterator sit = sources.begin();
         sit != sources.end();
@@ -61,9 +73,13 @@ std::vector<MyElectron> MyEventSelection::getElectrons(const edm::Event& iEvent,
           for(size_t iEle = 0; iEle < ieles->size(); iEle++)
             {
               const pat::Electron eIt = ((*ieles)[iEle]);
-              MyElectron newElectron = MyElectronConverter(eIt, lazytools, rawtag);
+              MyElectron newElectron = MyElectronConverter(eIt, lazytools, rawtag, rho_);
 	      newElectron.name = tag;
 
+	      //Anti-Conversions
+	      bool passconversionveto = !ConversionTools::hasMatchedConversion(dynamic_cast<reco::GsfElectron const&>(*(eIt.originalObjectRef())),hConversions,beamSpot_->position(),true,2.0,1e-06,0);
+	      newElectron.antiConv = int(passconversionveto);
+	      //Trigger match
 	      std::string labelMatcher = tag+triggerMatch;
               pat::helper::TriggerMatchHelper tmhelper;
               const pat::TriggerObjectRef objRef(tmhelper.triggerMatchObject( ieles, iEle, labelMatcher, iEvent, *triggerEvent ));
@@ -74,7 +90,8 @@ std::vector<MyElectron> MyEventSelection::getElectrons(const edm::Event& iEvent,
               if(newElectron.p4.Et() < minEt || 
 		 fabs(newElectron.p4.Eta()) > maxEta || 
 		 newElectron.electronSCEt < minSCEt) passKin = false;
-              //id
+              //id, don't apply any Id cut online
+	      /* //old simple vbtf e-id
 	      int eid=-1;
               if( !id.empty() ) eid = (int) eIt.electronID(id);
               if(tag.find("PFlow") != std::string::npos) eid = (int)eIt.electronID("eidVeryLooseMC");
@@ -83,8 +100,9 @@ std::vector<MyElectron> MyEventSelection::getElectrons(const edm::Event& iEvent,
 	      if(eid>=0 &&  !(eid & 0x1) ) passId = false;
 	      if(isFromConversion) passId = false;
 	      if(newElectron.nLostHits > maxLostHits || fabs(newElectron.D0*10000) >  maxD0)passId = false;
+	      */
 	      //iso
-	      if(newElectron.RelIso > maxRelIso) passIso = false;
+	      if(newElectron.pfRelIso > maxRelIso) passIso = false;
 
 	      int quality = 0;
               if(passKin)quality  = 1;
@@ -106,7 +124,7 @@ std::vector<MyElectron> MyEventSelection::getElectrons(const edm::Event& iEvent,
 }
   
     
-MyElectron MyEventSelection::MyElectronConverter(const pat::Electron& iEle, EcalClusterLazyTools& lazytools, TString& dirtag)
+MyElectron MyEventSelection::MyElectronConverter(const pat::Electron& iEle, EcalClusterLazyTools& lazytools, TString& dirtag, double rho_)
 {
   MyElectron newElectron;
   newElectron.Reset();
@@ -198,6 +216,7 @@ MyElectron MyEventSelection::MyElectronConverter(const pat::Electron& iEle, Ecal
   const reco::GsfTrackRef & eTrack = iEle.gsfTrack();
   if(!eTrack.isNull()){
     newElectron.nHits = eTrack->numberOfValidHits();
+    newElectron.nMissingHits = eTrack->trackerExpectedHitsInner().numberOfHits();
     newElectron.nLostHits = eTrack->trackerExpectedHitsInner().numberOfLostHits();
     newElectron.nLostPixelHits = eTrack->trackerExpectedHitsInner().numberOfLostPixelHits();
     newElectron.normChi2 = eTrack->normalizedChi2();
@@ -230,7 +249,16 @@ MyElectron MyEventSelection::MyElectronConverter(const pat::Electron& iEle, Ecal
   myhistos_["reliso_"+dirtag]->Fill(iso[3]);
   myhistos_["lowreliso_"+dirtag]->Fill(iso[3]);
 
-  
+  std::vector<double> pfiso = defaultPFElectronIsolation(iEle, rho_);
+  newElectron.ChHadIso = pfiso[0]; 
+  newElectron.PhotonIso = pfiso[1];  
+  newElectron.NeuHadIso = pfiso[2];  
+  newElectron.PileupIso = pfiso[3];
+  newElectron.pfRelIso = pfiso[4];
+
+  myhistos_["relpfiso_"+dirtag]->Fill(pfiso[4]); 
+  myhistos_["lowrelpfiso_"+dirtag]->Fill(pfiso[4]); 
+
   //id
   std::map<std::string, float> eidWPs; eidWPs.clear();
   const std::vector<pat::Electron::IdPair> & eids = iEle.electronIDs();
@@ -283,5 +311,19 @@ std::vector<double> MyEventSelection::defaultElectronIsolation (const pat::Elect
     values[2] = ele.hcalIso();
     values[3] = (ele.trackIso()+ele.ecalIso()+ele.hcalIso())/norm;
   }
+  return values;
+}
+std::vector<double> MyEventSelection::defaultPFElectronIsolation (const pat::Electron& ele, double rho_)
+{
+  //user isolation with custom configuration
+  double EffArea_ = ElectronEffectiveArea::GetElectronEffectiveArea(ElectronEffectiveArea::kEleGammaAndNeutralHadronIso04, ele.superCluster()->eta(),ElectronEffectiveArea::kEleEAData2012);
+  std::vector<double> values(6,0);
+  values[0] = ele.userIsolation(pat::PfChargedHadronIso);
+  values[1] = ele.userIsolation(pat::PfGammaIso);
+  values[2] = ele.userIsolation(pat::PfNeutralHadronIso);
+  //values[3] = ele.userIsolation(pat::User1Iso); //PfAllChargedHadronIso, including muon & ele
+  values[3] = ele.userIsolation(pat::PfAllParticleIso);
+  values[4] = (ele.userIsolation(pat::PfChargedHadronIso) + std::max(0., ((ele.userIsolation(pat::PfGammaIso)+ele.userIsolation(pat::PfNeutralHadronIso))-(rho_*EffArea_))))/ele.pt();
+
   return values;
 }
