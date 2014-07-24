@@ -82,7 +82,7 @@ public:
   std::vector<MyMET> getMETs(const edm::Event&, const edm::EventSetup&);
   MyMET MyMETConverter(const pat::MET&, TString&);
   std::vector<MyElectron> getElectrons(const edm::Event&, const edm::EventSetup&);
-  MyElectron MyElectronConverter(const pat::Electron&, EcalClusterLazyTools&, TString&);
+  MyElectron MyElectronConverter(const pat::Electron&, EcalClusterLazyTools&, TString&, double);
   std::vector<MyMuon> getMuons(const edm::Event&, const edm::EventSetup&);
   MyMuon MyMuonConverter(const pat::Muon&, TString&);
   std::vector<MyTau> getTaus(const edm::Event&, const edm::EventSetup&);
@@ -103,6 +103,7 @@ public:
   std::vector<double> defaultMuonIsolation(const pat::Muon&, bool isPF=false);
   std::vector<double> defaultPFMuonIsolation(const pat::Muon&);
   std::vector<double> defaultElectronIsolation(const pat::Electron&, bool isPF=false);
+  std::vector<double> defaultPFElectronIsolation (const pat::Electron&, double);
   int assignDYchannel(const edm::Event&, const edm::EventSetup&);
   int assignWJets(const edm::Event&, const edm::EventSetup&);
   int assignTTEvent(const edm::Event&, const edm::EventSetup&);

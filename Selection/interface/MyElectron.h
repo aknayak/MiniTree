@@ -32,6 +32,7 @@ class MyElectron
   
   //Electron Ids
   std::map<std::string, float>eidWPs;
+  int antiConv;
   
   // variables for lepton ID:
   double eSuperClusterOverP;
@@ -60,6 +61,7 @@ class MyElectron
   int    isEB;
   
   int nHits;
+  int nMissingHits;
   int nLostHits;
   int nLostPixelHits;
   double normChi2;
@@ -73,6 +75,11 @@ class MyElectron
   double ECalIso04;
   double HCalIso04;
   double RelIso04;
+  double ChHadIso; 
+  double PhotonIso;  
+  double NeuHadIso;  
+  double PileupIso;
+  double pfRelIso;
   
   double IP3D;
   double IP3DError;
