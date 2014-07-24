@@ -15,20 +15,20 @@ process.GlobalTag.globaltag = cms.string( 'GR_R_36X_V11A::All' )
 
 # add simple cut based electron identification to PAT
 #process.load('RecoEgamma.ElectronIdentification.simpleEleIdSequence_cff')
-process.load("ElectroWeakAnalysis.WENu.simpleEleIdSequence_cff")
-process.makePatElectrons = cms.Sequence( process.eIdSequence * process.simpleEleIdSequence * process.electronMatch * process.patElectrons )
-process.patElectrons.electronIDSources.simpleEleId95relIso =cms.InputTag("simpleEleId95relIso")
-process.patElectrons.electronIDSources.simpleEleId90relIso =cms.InputTag("simpleEleId90relIso")
-process.patElectrons.electronIDSources.simpleEleId85relIso =cms.InputTag("simpleEleId85relIso")
-process.patElectrons.electronIDSources.simpleEleId80relIso =cms.InputTag("simpleEleId80relIso")
-process.patElectrons.electronIDSources.simpleEleId70relIso =cms.InputTag("simpleEleId70relIso")
-process.patElectrons.electronIDSources.simpleEleId60relIso =cms.InputTag("simpleEleId60relIso")
-process.patElectrons.electronIDSources.simpleEleId95cIso =cms.InputTag("simpleEleId95cIso")
-process.patElectrons.electronIDSources.simpleEleId90cIso =cms.InputTag("simpleEleId90cIso")
-process.patElectrons.electronIDSources.simpleEleId85cIso =cms.InputTag("simpleEleId85cIso")
-process.patElectrons.electronIDSources.simpleEleId80cIso =cms.InputTag("simpleEleId80cIso")
-process.patElectrons.electronIDSources.simpleEleId70cIso =cms.InputTag("simpleEleId70cIso")
-process.patElectrons.electronIDSources.simpleEleId60cIso =cms.InputTag("simpleEleId60cIso")
+#process.load("ElectroWeakAnalysis.WENu.simpleEleIdSequence_cff")
+#process.makePatElectrons = cms.Sequence( process.eIdSequence * process.simpleEleIdSequence * process.electronMatch * process.patElectrons )
+#process.patElectrons.electronIDSources.simpleEleId95relIso =cms.InputTag("simpleEleId95relIso")
+#process.patElectrons.electronIDSources.simpleEleId90relIso =cms.InputTag("simpleEleId90relIso")
+#process.patElectrons.electronIDSources.simpleEleId85relIso =cms.InputTag("simpleEleId85relIso")
+#process.patElectrons.electronIDSources.simpleEleId80relIso =cms.InputTag("simpleEleId80relIso")
+#process.patElectrons.electronIDSources.simpleEleId70relIso =cms.InputTag("simpleEleId70relIso")
+#process.patElectrons.electronIDSources.simpleEleId60relIso =cms.InputTag("simpleEleId60relIso")
+#process.patElectrons.electronIDSources.simpleEleId95cIso =cms.InputTag("simpleEleId95cIso")
+#process.patElectrons.electronIDSources.simpleEleId90cIso =cms.InputTag("simpleEleId90cIso")
+#process.patElectrons.electronIDSources.simpleEleId85cIso =cms.InputTag("simpleEleId85cIso")
+#process.patElectrons.electronIDSources.simpleEleId80cIso =cms.InputTag("simpleEleId80cIso")
+#process.patElectrons.electronIDSources.simpleEleId70cIso =cms.InputTag("simpleEleId70cIso")
+#process.patElectrons.electronIDSources.simpleEleId60cIso =cms.InputTag("simpleEleId60cIso")
 
 
 #-- Meta data to be logged in DBS ---------------------------------------------
@@ -56,6 +56,9 @@ from MiniTree.Selection.TauExtra_cff import *
 #muon config
 from MiniTree.Selection.MuonExtra_cff import *
 
+#electron config
+from MiniTree.Selection.ElectronExtra_cff import *
+
 #PFlow
 from MiniTree.Selection.pfToPatSequences_cff import *
 
@@ -63,7 +66,8 @@ from MiniTree.Selection.pfToPatSequences_cff import *
 from MiniTree.Selection.GeneratorLevelUtilities_cff import *
 
 #TTBar Kinematic Fitter for muon+Jets
-from MiniTree.Selection.ttSemiLepKinFitMuon_cff import *
+#from MiniTree.Selection.ttSemiLepKinFitMuon_cff import *
+#from MiniTree.Selection.ttSemiLepKinFitElectron_cff import *
 
 #filter to count all events processed
 process.load("MiniTree.Selection.alleventsfilter_cfi")

@@ -65,14 +65,15 @@ BaseElectronsSet =  cms.PSet(sources = cms.VInputTag("selectedPatElectrons", "se
                              minSCEt = cms.double(10),
                              maxEta = cms.double(2.5),
                              ecalOnly = cms.bool(True),
-                             id = cms.string('simpleEleId90relIso'),
+                             id = cms.string('mvaTrigV0'),
                              maxD0 = cms.double(400),
                              maxRelIso = cms.double(0.25),
                              useDefaultIso = cms.bool(True),
                              maxTrackLostHits = cms.int32(1),
                              minDeltaRtoMuons = cms.double(0.1),
                              minSigmaIetaIeta = cms.double(0.002),
-                             minS4S1=cms.double(0.05)
+                             minS4S1=cms.double(0.05),
+                             rho = cms.InputTag("kt6PFJets", "rho")
                              )
 
 #my base values for jet selection -----------------------------------------------
