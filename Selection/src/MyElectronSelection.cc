@@ -19,6 +19,7 @@ std::vector<MyElectron> MyEventSelection::getElectrons(const edm::Event& iEvent,
     double minSCEt = configParamsElectrons_.getParameter<double>("minSCEt");
     double maxEta = configParamsElectrons_.getParameter<double>("maxEta");
     std::string id = configParamsElectrons_.getParameter<std::string>("id");
+    double mvacut = configParamsElectrons_.getParameter<double>("mvacut");
     double maxD0 = configParamsElectrons_.getParameter<double>("maxD0");
     double maxRelIso = configParamsElectrons_.getParameter<double>("maxRelIso");
     //bool useDefaultIso = configParamsElectrons_.getParameter<bool>("useDefaultIso");
@@ -90,6 +91,14 @@ std::vector<MyElectron> MyEventSelection::getElectrons(const edm::Event& iEvent,
               if(newElectron.p4.Et() < minEt || 
 		 fabs(newElectron.p4.Eta()) > maxEta || 
 		 newElectron.electronSCEt < minSCEt) passKin = false;
+
+	      // apply mva Id
+	      double mvaid = eIt.electronID(id);
+	      //	      cout <<"mvaid:  " << mvaid << endl;
+	      if(mvaid < mvacut) passId = false;
+	      // anoter Id cut
+	      if(newElectron.nMissingHits != 0) passId = false;
+	      if(!passconversionveto) passId = false;
               //id, don't apply any Id cut online
 	      /* //old simple vbtf e-id
 	      int eid=-1;

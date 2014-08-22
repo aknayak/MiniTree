@@ -19,6 +19,9 @@ MyEventSelection::MyEventSelection(const edm::ParameterSet& iConfig)
   runKineFitter_ = configParamsKFPs_.getParameter<bool>("runKineFitter");
   
   std::string code = configParamsMC_.getParameter<std::string>("sampleCode");
+  inputch = configParamsMC_.getParameter<std::string>("sampleChannel");
+  
+
   if(code!=std::string("DATA")) { isData_=false; }
   else{ isData_=true; inputDataSampleCode_ = MyEvent::DATA; }
 
@@ -26,10 +29,23 @@ MyEventSelection::MyEventSelection(const edm::ParameterSet& iConfig)
   if(code==std::string("ZJETS")){ inputDataSampleCode_ = MyEvent::ZJETS;  }
   if(code==std::string("WJETS")){ inputDataSampleCode_ = MyEvent::WJETS;  }
   if(code==std::string("TOPS")) { inputDataSampleCode_ = MyEvent::TOPS;   }
+  if(code==std::string("TBARS")) { inputDataSampleCode_ = MyEvent::TBARS; }
   if(code==std::string("TOPT")) { inputDataSampleCode_ = MyEvent::TOPT;   }
+  if(code==std::string("TBART")) { inputDataSampleCode_ = MyEvent::TBART; }
   if(code==std::string("TOPW")) { inputDataSampleCode_ = MyEvent::TOPW;   }
+  if(code==std::string("TBARW")) { inputDataSampleCode_ = MyEvent::TBARW; }
   if(code==std::string("QCD" )) { inputDataSampleCode_ = MyEvent::QCD;    }
-  if(code==std::string(""))     { inputDataSampleCode_ = MyEvent::OTHER;  }
+  if(code==std::string("WH")) { inputDataSampleCode_ = MyEvent::WH; }
+  if(code==std::string("HH")) { inputDataSampleCode_ = MyEvent::HH; }
+  if(code==std::string("")) { inputDataSampleCode_ = MyEvent::OTHER; }
+  if(code==std::string("W1JETS")) { inputDataSampleCode_ = MyEvent::W1JETS; }
+  if(code==std::string("W2JETS")) { inputDataSampleCode_ = MyEvent::W2JETS; }
+  if(code==std::string("W3JETS")) { inputDataSampleCode_ = MyEvent::W3JETS; }
+  if(code==std::string("W4JETS")) { inputDataSampleCode_ = MyEvent::W4JETS; }
+  if(code==std::string("Z1JETS")) { inputDataSampleCode_ = MyEvent::Z1JETS; }
+  if(code==std::string("Z2JETS")) { inputDataSampleCode_ = MyEvent::Z2JETS; }
+  if(code==std::string("Z3JETS")) { inputDataSampleCode_ = MyEvent::Z3JETS; }
+  if(code==std::string("Z4JETS")) { inputDataSampleCode_ = MyEvent::Z4JETS; }
   if(code==std::string("WW"))   { inputDataSampleCode_ = MyEvent::WW;     }
   if(code==std::string("WZ"))   { inputDataSampleCode_ = MyEvent::WZ;     }
   if(code==std::string("ZZ"))   { inputDataSampleCode_ = MyEvent::ZZ;     }
@@ -164,7 +180,13 @@ void MyEventSelection::Set(const edm::Event& e, const edm::EventSetup& es)
   }
   myhistos_["SelMuMultiplicity"]->Fill(nIsoMuon);
 
-  int nIsoLepton = nIsoMuon + nIsoElectron;
+  int nIsoLepton = 0;
+  //  int nIsoLepton = nIsoMuon + nIsoElectron;
+  if(inputch==std::string("electron")){ nIsoLepton = nIsoElectron; }//std::cout << "elctron found" << std::endl;}
+  //  int nIsoLepton = nIsoElectron;
+  if(inputch==std::string("muon")){ nIsoLepton = nIsoMuon; }//std::cout << "muon found" << std::endl;}
+
+  
 
   std::vector<MyJet> jets = event_.Jets;
   int nJets = 0, nHighPtJets = 0;
@@ -190,7 +212,7 @@ void MyEventSelection::Set(const edm::Event& e, const edm::EventSetup& es)
     EventQuality++;
     if(nIsoLepton > 0){
       EventQuality++;
-      if(nJets > 0){
+      if(nJets > 2){
 	EventQuality++;
 	if(nHighPtJets > 0){
 	  EventQuality++;

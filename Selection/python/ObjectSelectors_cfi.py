@@ -66,6 +66,7 @@ BaseElectronsSet =  cms.PSet(sources = cms.VInputTag("selectedPatElectrons", "se
                              maxEta = cms.double(2.5),
                              ecalOnly = cms.bool(True),
                              id = cms.string('mvaTrigV0'),
+                             mvacut = cms.double(0.75),
                              maxD0 = cms.double(400),
                              maxRelIso = cms.double(0.25),
                              useDefaultIso = cms.bool(True),
@@ -111,6 +112,7 @@ BaseMetsSet = cms.PSet(sources = cms.VInputTag("patMETs","patMETsPFlow","patPfMe
 BaseMCTruthSet = cms.PSet( isData = cms.bool(False),
                            producePDFweights = cms.bool(False),
                            sampleCode = cms.string("SEECODES"),
+                           sampleChannel = cms.string("electron"),
                            jpMatchSources = cms.VInputTag("selectedPatJetsByRef", "selectedPatJetsAK5JPTByRef", "selectedPatJetsAK5PFByRef", "selectedPatJetsPFlowByRef")
                            )
 #values for kine fit object collection ------------------------------------------------
